@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram WebApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .container h1 {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        .container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Telegram WebApp</h1>
+        <button id="sendData">Отправить данные</button>
+        <div id="result" style="margin-top: 20px;"></div>
+    </div>
+    <script>
+        // Инициализация WebApp
+        const tg = window.Telegram.WebApp;
+
+        document.getElementById('sendData').addEventListener('click', () => {
+            const data = { message: "Hello from WebApp!" };
+
+            // Отправляем данные обратно в Telegram
+            tg.sendData(JSON.stringify(data));
+            document.getElementById('result').innerText = "Данные отправлены в Telegram!";
+        });
+
+        tg.ready(); // Сообщаем Telegram, что приложение готово
+    </script>
+</body>
+</html>

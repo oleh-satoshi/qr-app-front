@@ -3,63 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram WebApp</title>
+    <title>QR Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f9;
         }
-        .container {
-            text-align: center;
+        .dashboard {
+            background: #fff;
+            border-radius: 10px;
             padding: 20px;
-            background: white;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard h1 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f4f4f4;
+            padding: 15px;
             border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
         }
-        .container h1 {
-            margin-bottom: 10px;
+        .stat h2 {
+            margin: 0;
             font-size: 24px;
+            font-weight: bold;
         }
-        .container button {
+        .chart {
+            height: 200px; /* Фиксированная высота графика */
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
             padding: 10px 20px;
             font-size: 16px;
-            color: white;
-            background-color: #007BFF;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .container button:hover {
-            background-color: #0056b3;
+        button.create {
+            background-color: #007bff;
+            color: #fff;
+        }
+        button.watch {
+            background-color: #555;
+            color: #fff;
+        }
+        button:hover {
+            opacity: 0.9;
         }
     </style>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Telegram WebApp</h1>
-        <button id="sendData">Отправить данные</button>
-        <div id="result" style="margin-top: 20px;"></div>
+    <div class="dashboard">
+        <h1>Step Count</h1>
+        <div class="stat">
+            <div>
+                <h2 id="totalScanning">800</h2>
+                <p>Total scanning</p>
+            </div>
+            <i class="fas fa-shoe-prints fa-2x" style="color: #555;"></i>
+        </div>
+        <div class="chart">
+            <canvas id="myChart"></canvas>
+        </div>
+        <div class="buttons">
+            <button class="create">Create new QR</button>
+            <button class="watch">Watch my QRs</button>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Инициализация WebApp
-        const tg = window.Telegram.WebApp;
-
-        document.getElementById('sendData').addEventListener('click', () => {
-            const data = { message: "Hello from WebApp!" };
-
-            // Отправляем данные обратно в Telegram
-            tg.sendData(JSON.stringify(data));
-            document.getElementById('result').innerText = "Данные отправлены в Telegram!";
+        // График
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], // Таймстемпы
+                datasets: [{
+                    label: 'Scans per day',
+                    data: [50, 100, 150, 200, 250, 300, 350], // Количество сканирований
+                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4 // Сглаживание линий
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Фиксируем высоту графика
+                scales: {
+                    x: {
+                        grid: {
+                            display: false // Убираем сетку по оси X
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 50 // Интервал на оси Y
+                        }
+                    }
+                }
+            }
         });
 
-        tg.ready(); // Сообщаем Telegram, что приложение готово
+        // Анимация Total Scanning
+        const totalScanning = document.getElementById('totalScanning');
+        let currentTotal = 0;
+        const targetTotal = 800;
+
+        const interval = setInterval(() => {
+            if (currentTotal < targetTotal) {
+                currentTotal += 20; // Шаг
+                totalScanning.innerText = currentTotal;
+            } else {
+                clearInterval(interval);
+            }
+        }, 50);
     </script>
 </body>
 </html>

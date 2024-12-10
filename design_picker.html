@@ -39,21 +39,24 @@
     }
 
     .qr-preview {
-      width: 100px;
-      height: 100px;
+      width: 100%; /* Контейнер растягивается */
+      max-width: 300px; /* Ограничение максимальной ширины */
+      height: 0;
+      padding-bottom: 100%; /* Делает контейнер квадратным */
       margin: 0 auto 10px auto;
+      position: relative;
       background-color: #eef4ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       border-radius: 8px;
+      overflow: hidden;
     }
 
     .qr-preview img {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      border-radius: 8px;
+      object-fit: cover; /* Гарантирует, что изображение заполнит контейнер */
     }
 
     .card-text {
@@ -81,14 +84,14 @@
       background-color: #003f7f;
     }
 
-    /* Медиазапрос для узких экранов */
+    /* Медиазапрос для мобильных устройств */
     @media (max-width: 768px) {
       .grid {
         grid-template-columns: 1fr; /* Одна карточка в строке */
       }
 
-      .card {
-        width: 100%; /* Карточка растягивается на всю ширину */
+      .qr-preview {
+        max-width: 90%; /* Увеличиваем ширину контейнера для мобильных */
       }
     }
   </style>
@@ -99,7 +102,7 @@
     <!-- Карточки будут добавлены динамически -->
   </div>
   <script>
-    // Получение всех изображений из папки
+    // Список QR-кодов
     const qrFiles = [
       'views-qr/view-qr1.png',
       'views-qr/view-qr2.png',
@@ -126,7 +129,6 @@
     // Функция выбора дизайна
     function selectDesign(filePath) {
       alert(`Вы выбрали дизайн: ${filePath}`);
-      // Логика обработки выбора (например, отправка на сервер)
     }
   </script>
 </body>

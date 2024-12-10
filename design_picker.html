@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Design Picker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      padding: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .qr-preview {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 10px auto;
+      background-color: #eef4ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+    }
+
+    .qr-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card-text {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .select-button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+    }
+
+    .select-button:hover {
+      background-color: #0056b3;
+    }
+
+    .select-button:active {
+      background-color: #003f7f;
+    }
+  </style>
+</head>
+<body>
+  <h1>Choose Your QR Design</h1>
+  <div class="grid" id="design-container">
+    <!-- Карточки будут добавлены динамически -->
+  </div>
+
+  <script>
+    // Получение всех изображений из папки
+    const qrFiles = [
+      'views-qr/view-qr1.png',
+      'views-qr/view-qr2.png',
+      'views-qr/view-qr3.png',
+      'views-qr/view-qr4.png'
+    ];
+
+    const designContainer = document.getElementById('design-container');
+
+    // Генерация карточек
+    qrFiles.forEach((file, index) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      card.innerHTML = `
+        <div class="qr-preview">
+          <img src="${file}" alt="QR Design ${index + 1}">
+        </div>
+        <div class="card-text">Design ${index + 1}</div>
+        <button class="select-button" onclick="selectDesign('${file}')">Выбрать</button>
+      `;
+
+      designContainer.appendChild(card);
+    });
+
+    // Функция выбора дизайна
+    function selectDesign(filePath) {
+      alert(`Вы выбрали дизайн: ${filePath}`);
+      // Логика обработки выбора (например, отправка на сервер)
+    }
+  </script>
+</body>
+</html>

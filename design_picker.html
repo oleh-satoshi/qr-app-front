@@ -80,6 +80,17 @@
     .select-button:active {
       background-color: #003f7f;
     }
+
+    /* Медиазапрос для узких экранов */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr; /* Одна карточка в строке */
+      }
+
+      .card {
+        width: 100%; /* Карточка растягивается на всю ширину */
+      }
+    }
   </style>
 </head>
 <body>
@@ -87,7 +98,6 @@
   <div class="grid" id="design-container">
     <!-- Карточки будут добавлены динамически -->
   </div>
-
   <script>
     // Получение всех изображений из папки
     const qrFiles = [
@@ -103,7 +113,6 @@
     qrFiles.forEach((file, index) => {
       const card = document.createElement('div');
       card.className = 'card';
-
       card.innerHTML = `
         <div class="qr-preview">
           <img src="${file}" alt="QR Design ${index + 1}">
@@ -111,7 +120,6 @@
         <div class="card-text">Design ${index + 1}</div>
         <button class="select-button" onclick="selectDesign('${file}')">Выбрать</button>
       `;
-
       designContainer.appendChild(card);
     });
 

@@ -3,142 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Updated Layout</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f9f9f9;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
+
         .dashboard {
             background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            width: 400px;
+            border-radius: 15px;
+            padding: 20px 30px;
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .dashboard h1 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #555;
-        }
+
         .stat {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .stat h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .chart {
-            height: 200px; /* Фиксированная высота графика */
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .buttons {
-            display: flex;
             justify-content: space-between;
+            background: #f4f4f4;
+            padding: 20px 30px;
+            border-radius: 15px;
+            height: 120px;
+            position: relative;
         }
-        button {
+
+        .stat-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .stat-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #919191;
+            margin: 0;
+        }
+
+        .stat-value {
+            font-family: 'Poppins', sans-serif;
+            font-size: 72px;
+            font-weight: 600;
+            margin: 0;
+            color: #000;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 140px;
+            height: 140px;
+        }
+
+        .button {
+            display: inline-block;
             padding: 10px 20px;
-            font-size: 16px;
+            background-color: #000;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            margin: 10px 0;
+            text-decoration: none;
         }
-        button.create {
-            background-color: #007bff;
-            color: #fff;
+
+        .image-list {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
         }
-        button.watch {
-            background-color: #555;
-            color: #fff;
+
+        .image-item {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
-        button:hover {
-            opacity: 0.9;
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
 <body>
     <div class="dashboard">
-        <h1>Step Count</h1>
         <div class="stat">
-            <div>
-                <h2 id="totalScanning">800</h2>
-                <p>Total scanning</p>
+            <div class="stat-left">
+                <p class="stat-text">Total scanning:</p>
             </div>
-            <i class="fas fa-shoe-prints fa-2x" style="color: #555;"></i>
+            <div style="display: flex; align-items: center;">
+                <h2 class="stat-value">800</h2>
+            </div>
+            <img src="Shoes.png" alt="Icon" class="stat-icon">
         </div>
-        <div class="chart">
-            <canvas id="myChart"></canvas>
-        </div>
-        <div class="buttons">
-            <button class="create">Create new QR</button>
-            <button class="watch">Watch my QRs</button>
+
+        <a href="qr_form.html" class="button">Create new QR</a>
+
+        <div class="image-list">
+            <div class="image-item">
+                <img src="ex.png" alt="Image 1">
+            </div>
+            <div class="image-item">
+                <img src="ex.png" alt="Image 2">
+            </div>
+            <div class="image-item">
+                <img src="ex.png" alt="Image 3">
+            </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // График
-        const ctx = document.getElementById('myChart').getContext('2d');
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], // Таймстемпы
-                datasets: [{
-                    label: 'Scans per day',
-                    data: [50, 100, 150, 200, 250, 300, 350], // Количество сканирований
-                    backgroundColor: 'rgba(0, 123, 255, 0.2)',
-                    borderColor: 'rgba(0, 123, 255, 1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4 // Сглаживание линий
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false, // Фиксируем высоту графика
-                scales: {
-                    x: {
-                        grid: {
-                            display: false // Убираем сетку по оси X
-                        }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 50 // Интервал на оси Y
-                        }
-                    }
-                }
-            }
-        });
-
-        // Анимация Total Scanning
-        const totalScanning = document.getElementById('totalScanning');
-        let currentTotal = 0;
-        const targetTotal = 800;
-
-        const interval = setInterval(() => {
-            if (currentTotal < targetTotal) {
-                currentTotal += 20; // Шаг
-                totalScanning.innerText = currentTotal;
-            } else {
-                clearInterval(interval);
-            }
-        }, 50);
-    </script>
 </body>
 </html>

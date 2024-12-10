@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Створення QR коду</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif; /* Використовуємо шрифт Poppins */
+            background-color: #f9f9f9; /* Світло-сірий фон */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Займаємо всю висоту екрану */
+        }
+
+        .container {
+            background: #fff; /* Білий фон для контейнера */
+            border-radius: 15px; /* Закруглені кути */
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Тінь */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333; /* Темно-сірий колір заголовка */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc; /* Світло-сіра рамка */
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #000; /* Чорний фон кнопки */
+            color: #fff; /* Білий текст */
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create new QR</h1>
+        <form id="qrForm">
+            <label for="field1">Name</label>
+            <input type="text" id="field1" name="field1"><br><br>
+            <label for="field2">Link:</label>
+            <input type="text" id="field2" name="field2"><br><br>
+            <button type="submit">Створити QR</button>
+        </form>
+    </div>
+
+    <script>
+        // ... (JavaScript код залишається без змін) ...
+    </script>
+</body>
+</html>

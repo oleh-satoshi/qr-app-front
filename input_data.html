@@ -92,16 +92,18 @@
     // Загружаем данные из localStorage
     const selectedShape = localStorage.getItem('backgroundShape');
     const selectedDesign = localStorage.getItem('qrDesign');
+    const telegramId = localStorage.getItem('telegramId');
     const previewInfo = document.getElementById('previewInfo');
     const createButton = document.getElementById('createButton');
     const qrNameInput = document.getElementById('qrName');
     const qrLinkInput = document.getElementById('qrLink');
 
     // Проверяем данные и отображаем их, если они есть
-    if (selectedShape && selectedDesign) {
+    if (selectedShape && selectedDesign && telegramId) {
       previewInfo.innerHTML = `
         <p><strong>Selected Shape:</strong> ${selectedShape}</p>
         <p><strong>Selected Design:</strong> ${selectedDesign}</p>
+        <p><strong>Telegram ID:</strong> ${telegramId}</p>
       `;
     } else {
       previewInfo.innerHTML = `<p style="color: red;">Some data is missing</p>`;
@@ -123,7 +125,6 @@
     async function createQRCode() {
       const qrName = qrNameInput.value.trim();
       const qrLink = qrLinkInput.value.trim();
-
       if (!qrName || !qrLink) {
         alert('Please fill out all fields!');
         return;
@@ -133,6 +134,7 @@
       let qrData = {
         qrDesign: selectedDesign,
         backgroundShape: selectedShape,
+        telegramId: telegramId,
         name: qrName,
         link: qrLink
       };

@@ -107,14 +107,12 @@
         </div>
         <a href="qr_shape_picker.html" class="button">Create QR</a>
     </div>
-
     <script>
         // Функция для извлечения параметров из URL
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return {
-                telegramId: params.get('telegramId'),
-                lang: params.get('lang')
+                telegramId: params.get('telegramId')
             };
         }
 
@@ -124,18 +122,13 @@
         // Извлекаем параметры из URL
         const params = getQueryParams();
 
-        // Сохраняем параметры в localStorage, если они существуют
+        // Сохраняем параметр telegramId в localStorage
         if (params.telegramId) {
             localStorage.setItem('telegramId', params.telegramId);
+            console.log('Telegram ID сохранён:', params.telegramId);
+        } else {
+            console.log('Telegram ID отсутствует в параметрах URL.');
         }
-        if (params.lang) {
-            localStorage.setItem('lang', params.lang);
-        }
-
-        console.log('Saved to localStorage:', {
-            telegramId: params.telegramId,
-            lang: params.lang
-        });
     </script>
 </body>
 </html>

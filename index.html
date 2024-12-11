@@ -19,70 +19,63 @@
         .dashboard {
             background: #fff;
             border-radius: 15px;
-            padding: 15px;
-            width: 100%; /* На всю ширину экрана */
-            max-width: 400px; /* Максимальная ширина для удобного просмотра */
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             gap: 15px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .stat {
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Выравниваем элементы по левому краю */
-
-            justify-content: space-between; /* Равномерное распределение */
+            justify-content: space-between;
             background: #f4f4f4;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
             position: relative;
-            text-align: center;
         }
 
         .stat-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center; /* Центрируем текст */
         }
 
         .stat-text {
-            font-size: 1.5rem; /* Пропорциональный размер текста */
+            font-size: 1.2rem;
             font-weight: 600;
             color: #919191;
             margin: 0;
-            justify-content: center;
-            align-items: center; /* Центрируем текст */
         }
 
         .stat-value {
-            font-size: 2.5rem; /* Пропорциональный размер числа */
-            font-weight: 700;
+            font-size: 4rem;
+            font-weight: 800;
             margin: 0;
-            justify-content: center;
-            align-items: center; /* Центрируем текст */
             color: #000;
+            line-height: 1; /* Убираем лишние отступы */
         }
 
         .stat-icon {
-            width: 60px; /* Пропорциональная ширина иконки */
-            height: 60px;
+            width: 80px;
+            height: 80px;
         }
 
         .button {
             display: inline-block;
-            padding: 10px;
+            padding: 15px;
             background-color: #000;
             color: #fff;
             border: none;
             border-radius: 10px;
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
-            width: 100%; /* Кнопка на всю ширину */
+            width: 100%;
             text-decoration: none;
         }
 
@@ -90,32 +83,28 @@
             background-color: #333;
         }
 
-        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
             .stat {
-                flex-direction: row; /* Оставляем горизонтальное выравнивание */
-            }
-
-            .stat-left {
-                align-items: flex-start; /* Слегка выравниваем текст влево */
+                flex-direction: row;
+                padding: 15px;
             }
 
             .stat-text {
-                font-size: 1.2rem; /* Уменьшение текста на мобильных */
+                font-size: 1rem;
             }
 
             .stat-value {
-                font-size: 2rem;
+                font-size: 3rem;
             }
 
             .stat-icon {
-                width: 50px;
-                height: 50px;
+                width: 60px;
+                height: 60px;
             }
 
             .button {
-                font-size: 0.9rem;
-                padding: 8px;
+                font-size: 1rem;
+                padding: 10px;
             }
         }
     </style>

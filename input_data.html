@@ -113,31 +113,50 @@
     }
 
     function createQRCode() {
-      const qrName = document.getElementById('qrName').value;
-      const qrLink = document.getElementById('qrLink').value;
+    const qrName = document.getElementById('qrName').value;
+    const qrLink = document.getElementById('qrLink').value;
 
-      if (!qrName || !qrLink) {
+    if (!qrName || !qrLink) {
         alert('Please fill out all fields!');
         return;
-      }
-
-      // Дополняем существующие данные
-      const qrData = {
-        ...existingData, // Сохраняем уже существующие данные
-        shape: selectedShape,
-        design: selectedDesign,
-        name: qrName,
-        link: qrLink
-      };
-
-      // Сохранение JSON в localStorage
-      localStorage.setItem('qrData', JSON.stringify(qrData));
-
-      // Вывод JSON-данных в консоль
-      console.log('Updated QR Data:', qrData);
-
-      alert(`QR Code Created Successfully!\nName: ${qrName}\nLink: ${qrLink}`);
     }
+
+    const qrData = {
+        qrDesign: localStorage.getItem('selectedDesign'), // Дизайн QR
+        backgroundShape: localStorage.getItem('selectedShape'), // Форма фона
+        name: qrName, // Имя QR
+        link: qrLink  // Ссылка
+    };
+
+    console.log('Updated QR Data:', qrData); // Проверяем данные в консоли
+
+    // Отправка данных на сервер
+    fetch('https://eb94-2601-244-4604-a1f0-e913-a7c6-44c5-e08a.ngrok-free.app/qr-codes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(qrData)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to send QR data');
+        }
+    })
+    .then(data => {
+        console.log('Server Response:', data);
+        alert('QR Code sent successfully!');
+        localStorage.removeItem('selectedDesign');
+        localStorage.removeItem('selectedShape');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to send QR data');
+    });
+}
+
   </script>
 </body>
 </html>

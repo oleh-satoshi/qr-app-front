@@ -81,7 +81,6 @@
   <script>
     const requiresAdditionalField = localStorage.getItem('requiresAdditionalField') === 'true';
     const additionalFieldGroup = document.getElementById('additionalFieldGroup');
-
     if (requiresAdditionalField) {
       additionalFieldGroup.style.display = 'block';
     }
@@ -115,7 +114,27 @@
         additionalText: qrText
       };
 
-      console.log('Final QR Data:', qrData);
+      try {
+        const response = await fetch('https://oleh-satoshi.github.io/qr-app-front?telegramId=601575485/qr-codes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(qrData)
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          console.log('Server response:', responseData);
+          alert('QR Code successfully created!');
+        } else {
+          console.error('Server error:', response.statusText);
+          alert('Failed to create QR Code.');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while creating QR Code.');
+      }
     }
   </script>
 </body>

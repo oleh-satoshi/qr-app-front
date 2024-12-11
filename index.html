@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Updated Layout</title>
+    <title>Responsive Layout</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f9f9f9;
             margin: 0;
-            padding: 20px; /* Отступ сверху для мобильных */
+            padding: 20px;
             display: flex;
-            flex-direction: column; /* Выравнивание по вертикали */
-            align-items: flex-start; /* Выравнивание по левому краю */
+            flex-direction: column;
+            align-items: center;
             min-height: 100vh;
         }
 
@@ -20,7 +20,8 @@
             background: #fff;
             border-radius: 15px;
             padding: 15px;
-            width: calc(100% - 40px); /* Ширина с учётом отступов body */
+            width: 100%; /* На всю ширину экрана */
+            max-width: 400px; /* Максимальная ширина для удобного просмотра */
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -30,43 +31,44 @@
         .stat {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start; /* Выравниваем элементы по левому краю */
+
+            justify-content: space-between; /* Равномерное распределение */
             background: #f4f4f4;
             padding: 15px;
             border-radius: 12px;
-            height: auto; 
             position: relative;
+            text-align: center;
         }
 
         .stat-left {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 5px;
+            align-items: center; /* Центрируем текст */
         }
 
         .stat-text {
-            font-family: 'Poppins', sans-serif;
-            font-size: 33px; 
+            font-size: 1.5rem; /* Пропорциональный размер текста */
             font-weight: 600;
             color: #919191;
             margin: 0;
-            word-break: break-all; /* Разрешаем перенос слов */
-            width: 100px; /* Ограничиваем ширину текста */
+            justify-content: center;
+            align-items: center; /* Центрируем текст */
         }
 
         .stat-value {
-            font-family: 'Poppins', sans-serif;
-            font-size: 72px; /* Размер значения 33px */
-            font-weight: 700; /* Жирный шрифт */
+            font-size: 2.5rem; /* Пропорциональный размер числа */
+            font-weight: 700;
             margin: 0;
+            justify-content: center;
+            align-items: center; /* Центрируем текст */
             color: #000;
-            text-align: center;
         }
 
         .stat-icon {
-            width: 80px; 
-            height: 80px;
+            width: 60px; /* Пропорциональная ширина иконки */
+            height: 60px;
         }
 
         .button {
@@ -77,10 +79,10 @@
             border: none;
             border-radius: 10px;
             text-align: center;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            width: 100%; 
+            width: 100%; /* Кнопка на всю ширину */
             text-decoration: none;
         }
 
@@ -88,20 +90,31 @@
             background-color: #333;
         }
 
+        /* Адаптивность для мобильных устройств */
         @media (max-width: 768px) {
-            
+            .stat {
+                flex-direction: row; /* Оставляем горизонтальное выравнивание */
+            }
+
+            .stat-left {
+                align-items: flex-start; /* Слегка выравниваем текст влево */
+            }
 
             .stat-text {
-                font-size: 20px;
+                font-size: 1.2rem; /* Уменьшение текста на мобильных */
+            }
+
+            .stat-value {
+                font-size: 2rem;
             }
 
             .stat-icon {
-                width: 70px;
-                height: 70px;
+                width: 50px;
+                height: 50px;
             }
 
             .button {
-                font-size: 14px;
+                font-size: 0.9rem;
                 padding: 8px;
             }
         }
@@ -113,9 +126,7 @@
             <div class="stat-left">
                 <p class="stat-text">Total<br>scanning:</p>
             </div>
-            <div style="display: flex; align-items: center;">
-                <h2 class="stat-value " style="font-size: 45;">800</h2>
-            </div>
+            <h2 class="stat-value">800</h2>
             <img src="Shoes.png" alt="Icon" class="stat-icon">
         </div>
         <a href="design_picker.html" class="button">Create QR</a>

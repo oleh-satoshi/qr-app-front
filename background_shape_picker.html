@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Shape Picker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,19 +11,22 @@
       padding: 20px;
       background-color: #f1f5f9;
     }
+
     h1 {
       font-size: 24px;
       color: #333;
       margin-bottom: 20px;
       text-align: center;
     }
+
     .grid {
       display: grid;
-      grid-template-columns: repeat(1, 1fr); /* Максимум два элемента в ряду */
+      grid-template-columns: 1fr; /* Одна колонка для телефонов */
       gap: 20px;
       justify-content: center;
       align-items: start;
     }
+
     .card {
       background-color: #fff;
       border-radius: 15px;
@@ -30,10 +34,12 @@
       padding: 15px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
     .card:hover {
       transform: scale(1.03);
       box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     }
+
     .qr-preview {
       width: 100%;
       display: flex;
@@ -41,32 +47,39 @@
       align-items: center;
       margin-bottom: 15px;
     }
+
     .qr-preview img {
       max-width: 100%;
       height: auto;
     }
+
     .shape-name {
       font-size: 18px;
       font-weight: bold;
       margin: 5px 0;
+      text-align: center;
     }
+
     .shape-description {
       font-size: 14px;
       color: #555;
       margin-bottom: 10px;
+      text-align: center;
     }
+
     .select-button {
       background-color: #000;
       color: #fff;
       border: none;
       border-radius: 10px;
-      padding: 10px 15px;
+      padding: 12px 20px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px; /* Увеличен размер текста кнопки */
       font-weight: bold;
       transition: background-color 0.2s ease, transform 0.2s ease;
       width: 100%;
     }
+
     .select-button:hover {
       background-color: #333;
       transform: translateY(-2px);
@@ -117,11 +130,9 @@
     ];
 
     const shapeContainer = document.getElementById('shape-container');
-
     shapeFiles.forEach((shape) => {
       const card = document.createElement('div');
       card.className = 'card';
-
       card.innerHTML = `
         <div class="qr-preview">
           <img src="${shape.file}" alt="${shape.name}">

@@ -90,8 +90,8 @@
   </div>
   <script>
     // Загружаем данные из localStorage
-    const selectedShape = localStorage.getItem('selectedShape');
-    const selectedDesign = localStorage.getItem('selectedDesign');
+    const selectedShape = localStorage.getItem('backgroundShape');
+    const selectedDesign = localStorage.getItem('qrDesign');
     const previewInfo = document.getElementById('previewInfo');
     const createButton = document.getElementById('createButton');
     const qrNameInput = document.getElementById('qrName');
@@ -129,15 +129,15 @@
         return;
       }
 
-      // Обновленный JSON-объект
-      const qrData = {
-        qrDesign: selectedDesign, // Дизайн QR
-        backgroundShape: selectedShape, // Форма фона
-        name: qrName, // Имя QR
-        link: qrLink // Ссылка
+      // Загружаем существующие данные из localStorage
+      let qrData = {
+        qrDesign: selectedDesign,
+        backgroundShape: selectedShape,
+        name: qrName,
+        link: qrLink
       };
 
-      console.log('Updated QR Data:', qrData); // Проверяем данные в консоли
+      console.log('Final QR Data:', qrData); // Проверяем данные в консоли
 
       // Отправка данных на сервер
       try {
@@ -148,7 +148,6 @@
           },
           body: JSON.stringify(qrData)
         });
-
         if (response.ok) {
           const data = await response.json();
           console.log('Server Response:', data);
@@ -163,8 +162,7 @@
       }
 
       // Удаляем данные из localStorage после успешной отправки
-      localStorage.removeItem('selectedDesign');
-      localStorage.removeItem('selectedShape');
+      localStorage.clear();
     }
   </script>
 </body>

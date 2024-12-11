@@ -85,7 +85,9 @@
     ];
 
     const designContainer = document.getElementById('design-container');
-    let qrData = {}; // JSON-объект для хранения данных
+
+    // Очищаем localStorage перед добавлением данных
+    localStorage.clear();
 
     qrFiles.forEach((qr, index) => {
       const card = document.createElement('div');
@@ -101,10 +103,13 @@
     });
 
     function selectDesign(filePath) {
-      qrData.selectedDesign = filePath; // Сохраняем выбранный QR-код
-      localStorage.setItem('qrData', JSON.stringify(qrData)); // Обновляем JSON в localStorage
-      console.log('Current QR Data:', qrData); // Логируем данные для проверки
-      window.location.href = 'background_shape_picker.html'; // Переходим на следующую страницу
+      // Сохраняем путь в localStorage с ключом 'qrDesign'
+      localStorage.setItem('qrDesign', filePath);
+
+      console.log('Selected Design Path:', filePath); // Логируем путь
+
+      // Переход на следующую страницу
+      window.location.href = 'background_shape_picker.html';
     }
   </script>
 </body>

@@ -11,19 +11,16 @@
       padding: 20px;
       background-color: #f9f9f9;
     }
-
     h1 {
       font-size: 20px;
       color: #333;
       margin-bottom: 20px;
     }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 20px;
     }
-
     .card {
       background-color: #fff;
       border-radius: 12px;
@@ -32,12 +29,10 @@
       padding: 15px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.15);
     }
-
     .qr-preview {
       width: 100%;
       max-width: 300px;
@@ -49,7 +44,6 @@
       border-radius: 8px;
       overflow: hidden;
     }
-
     .qr-preview img {
       position: absolute;
       top: 0;
@@ -58,9 +52,14 @@
       height: 100%;
       object-fit: cover;
     }
-
+    .qr-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
     .select-button {
-      background-color: #007bff;
+      background-color: black;
       color: #fff;
       border: none;
       border-radius: 8px;
@@ -69,9 +68,8 @@
       font-size: 14px;
       transition: background-color 0.2s ease;
     }
-
     .select-button:hover {
-      background-color: #0056b3;
+      background-color: #4d4d4d;
     }
   </style>
 </head>
@@ -80,29 +78,33 @@
   <div class="grid" id="design-container"></div>
   <script>
     const qrFiles = [
-      'views-qr/view-qr1.png',
-      'views-qr/view-qr2.png',
-      'views-qr/view-qr3.png',
-      'views-qr/view-qr4.png'
+      { file: 'views-qr/view-qr1.png', title: 'Classic Design' },
+      { file: 'views-qr/view-qr2.png', title: 'Modern Look' },
+      { file: 'views-qr/view-qr3.png', title: 'Minimalistic Style' },
+      { file: 'views-qr/view-qr4.png', title: 'Futuristic Theme' }
     ];
 
     const designContainer = document.getElementById('design-container');
+    let qrData = {}; // JSON-объект для хранения данных
 
-    qrFiles.forEach((file, index) => {
+    qrFiles.forEach((qr, index) => {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
+        <p class="qr-title">${qr.title}</p>
         <div class="qr-preview">
-          <img src="${file}" alt="QR Design ${index + 1}">
+          <img src="${qr.file}" alt="QR Design ${index + 1}">
         </div>
-        <button class="select-button" onclick="selectDesign('${file}')">Выбрать</button>
+        <button class="select-button" onclick="selectDesign('${qr.file}')">Выбрать</button>
       `;
       designContainer.appendChild(card);
     });
 
     function selectDesign(filePath) {
-      localStorage.setItem('selectedDesign', filePath); // Сохраняем QR-код
-      window.location.href = 'background_shape_picker.html'; // Переходим на страницу с выбором шейпов
+      qrData.selectedDesign = filePath; // Сохраняем выбранный QR-код
+      localStorage.setItem('qrData', JSON.stringify(qrData)); // Обновляем JSON в localStorage
+      console.log('Current QR Data:', qrData); // Логируем данные для проверки
+      window.location.href = 'background_shape_picker.html'; // Переходим на следующую страницу
     }
   </script>
 </body>

@@ -11,14 +11,12 @@
       padding: 20px;
       background-color: #f1f5f9;
     }
-
     h1 {
       font-size: 24px;
       color: #333;
       margin-bottom: 20px;
       text-align: center;
     }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -26,7 +24,6 @@
       justify-content: center;
       align-items: center;
     }
-
     .card {
       background-color: #fff;
       border-radius: 15px;
@@ -35,12 +32,10 @@
       padding: 20px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .card:hover {
       transform: scale(1.05);
       box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     }
-
     .qr-preview {
       width: 100%;
       padding-bottom: 100%;
@@ -48,10 +43,19 @@
       background-position: center;
       border-radius: 12px;
       margin-bottom: 15px;
+      position: relative;
     }
-
+    .qr-preview[style*="white_square.png"] {
+      border: 2px solid #000000;
+    }
+    .shape-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
     .select-button {
-      background-color: #007bff;
+      background-color: #000000;
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -61,14 +65,12 @@
       font-weight: bold;
       transition: background-color 0.2s ease, transform 0.2s ease;
     }
-
     .select-button:hover {
-      background-color: #0056b3;
+      background-color: #000000;
       transform: translateY(-2px);
     }
-
     .select-button:active {
-      background-color: #003f7f;
+      background-color: #535353;
       transform: translateY(0);
     }
   </style>
@@ -78,27 +80,34 @@
   <div class="grid" id="shape-container"></div>
   <script>
     const shapeFiles = [
-      './shapes/black_square.png',
-      './shapes/gray_square.png',
-      './shapes/white_square.png'
-    ]; // Список шейпов
+      { file: './shapes/black_square.svg', title: 'Obsidian Square' },
+      { file: './shapes/gray_square.png', title: 'Silver Shadow' },
+      { file: './shapes/white_square.png', title: 'Ivory Light' }
+    ]; // Список шейпов с названиями
 
     const shapeContainer = document.getElementById('shape-container');
 
-    shapeFiles.forEach((shapeFile) => {
+    shapeFiles.forEach((shape) => {
       const card = document.createElement('div');
       card.className = 'card';
       card.innerHTML = `
-        <div class="qr-preview" style="background-image: url('${shapeFile}')">
-        </div>
-        <button class="select-button" onclick="selectShape('${shapeFile}')">Выбрать</button>
+        <p class="shape-title">${shape.title}</p>
+        <div class="qr-preview" style="background-image: url('${shape.file}')"></div>
+        <button class="select-button" onclick="selectShape('${shape.file}')">Выбрать</button>
       `;
       shapeContainer.appendChild(card);
     });
 
     function selectShape(shapePath) {
-      localStorage.setItem('selectedShape', shapePath); // Сохраняем выбранный шейп
-      alert(`Выбран Shape: ${shapePath}`); // Проверяем результат
+      // Сохраняем выбранный шейп в JSON
+      const qrData = {
+        selectedShape: shapePath
+      };
+      // Сохраняем JSON в localStorage
+      localStorage.setItem('qrData', JSON.stringify(qrData));
+      console.log('Сохранённый JSON:', qrData); // Логируем данные для проверки
+      // Переходим на страницу создания QR
+      window.location.href = 'input_data.html';
     }
   </script>
 </body>

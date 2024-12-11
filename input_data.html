@@ -41,10 +41,6 @@
       border-radius: 8px;
       font-size: 14px;
     }
-    .form-group input:focus {
-      border-color: #007bff;
-      outline: none;
-    }
     .create-button {
       background-color: #007bff;
       color: #fff;
@@ -54,21 +50,12 @@
       cursor: pointer;
       font-size: 16px;
       font-weight: bold;
-      transition: background-color 0.2s ease, transform 0.2s ease;
+      transition: background-color 0.2s ease;
       width: 100%;
     }
     .create-button:disabled {
       background-color: #ccc;
       cursor: not-allowed;
-    }
-    .info {
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #e7f4ff;
-      border: 1px solid #cce0ff;
-      border-radius: 8px;
-      color: #333;
-      font-size: 14px;
     }
   </style>
 </head>
@@ -84,32 +71,25 @@
         <label for="qrLink">Target Link</label>
         <input type="url" id="qrLink" name="qrLink" placeholder="Enter the target URL" required>
       </div>
+      <div class="form-group" id="additionalFieldGroup" style="display: none;">
+        <label for="qrText">QR Code Text</label>
+        <input type="text" id="qrText" name="qrText" placeholder="Enter additional text">
+      </div>
       <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Create QR</button>
     </form>
-    <div class="info" id="previewInfo"></div>
   </div>
   <script>
-    // Загружаем данные из localStorage
-    const selectedShape = localStorage.getItem('backgroundShape');
-    const selectedDesign = localStorage.getItem('qrDesign');
-    const telegramId = localStorage.getItem('telegramId');
-    const previewInfo = document.getElementById('previewInfo');
-    const createButton = document.getElementById('createButton');
-    const qrNameInput = document.getElementById('qrName');
-    const qrLinkInput = document.getElementById('qrLink');
+    const requiresAdditionalField = localStorage.getItem('requiresAdditionalField') === 'true';
+    const additionalFieldGroup = document.getElementById('additionalFieldGroup');
 
-    // Проверяем данные и отображаем их, если они есть
-    if (selectedShape && selectedDesign && telegramId) {
-      previewInfo.innerHTML = `
-        <p><strong>Selected Shape:</strong> ${selectedShape}</p>
-        <p><strong>Selected Design:</strong> ${selectedDesign}</p>
-        <p><strong>Telegram ID:</strong> ${telegramId}</p>
-      `;
-    } else {
-      previewInfo.innerHTML = `<p style="color: red;">Some data is missing</p>`;
+    if (requiresAdditionalField) {
+      additionalFieldGroup.style.display = 'block';
     }
 
-    // Функция для включения или отключения кнопки
+    const qrNameInput = document.getElementById('qrName');
+    const qrLinkInput = document.getElementById('qrLink');
+    const createButton = document.getElementById('createButton');
+
     function updateButtonState() {
       if (qrNameInput.value.trim() && qrLinkInput.value.trim()) {
         createButton.disabled = false;
@@ -118,53 +98,24 @@
       }
     }
 
-    // Добавляем обработчики событий для ввода текста
     qrNameInput.addEventListener('input', updateButtonState);
     qrLinkInput.addEventListener('input', updateButtonState);
 
     async function createQRCode() {
       const qrName = qrNameInput.value.trim();
       const qrLink = qrLinkInput.value.trim();
-      if (!qrName || !qrLink) {
-        alert('Please fill out all fields!');
-        return;
-      }
+      const qrText = requiresAdditionalField ? document.getElementById('qrText').value.trim() : null;
 
-      // Загружаем существующие данные из localStorage
-      let qrData = {
-        qrDesign: selectedDesign,
-        backgroundShape: selectedShape,
-        telegramId: telegramId,
+      const qrData = {
+        backgroundShape: localStorage.getItem('backgroundShape'),
+        qrDesign: localStorage.getItem('qrDesign'),
+        telegramId: localStorage.getItem('telegramId'),
         name: qrName,
-        link: qrLink
+        link: qrLink,
+        additionalText: qrText
       };
 
-      console.log('Final QR Data:', qrData); // Проверяем данные в консоли
-
-      // Отправка данных на сервер
-      try {
-        const response = await fetch('https://eb94-2601-244-4604-a1f0-e913-a7c6-44c5-e08a.ngrok-free.app/qr-codes', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(qrData)
-        });
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Server Response:', data);
-          alert('QR Code Created Successfully!');
-        } else {
-          console.error('Server Error:', response.statusText);
-          alert('Failed to send QR data');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to send QR data');
-      }
-
-      // Удаляем данные из localStorage после успешной отправки
-      localStorage.clear();
+      console.log('Final QR Data:', qrData);
     }
   </script>
 </body>

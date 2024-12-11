@@ -12,21 +12,22 @@
       background-color: #f9f9f9;
     }
     h1 {
-      font-size: 20px;
+      font-size: 24px;
       color: #333;
       margin-bottom: 20px;
+      text-align: center;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 20px;
+      grid-template-columns: 1fr; /* Одна карточка в ряду */
+      gap: 30px; /* Увеличен отступ между карточками */
     }
     .card {
       background-color: #fff;
       border-radius: 12px;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
       text-align: center;
-      padding: 15px;
+      padding: 20px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card:hover {
@@ -35,28 +36,28 @@
     }
     .qr-preview {
       width: 100%;
-      max-width: 300px;
-      height: 0;
-      padding-bottom: 100%;
+      max-width: 500px; /* Увеличен размер картинок */
+      height: auto;
       margin: 0 auto 10px auto;
-      position: relative;
       background-color: #eef4ff;
       border-radius: 8px;
       overflow: hidden;
     }
     .qr-preview img {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
+      object-fit: contain;
     }
     .qr-title {
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
       color: #333;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+    }
+    .qr-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 15px;
     }
     .select-button {
       background-color: black;
@@ -65,7 +66,7 @@
       border-radius: 8px;
       padding: 10px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 16px;
       transition: background-color 0.2s ease;
     }
     .select-button:hover {
@@ -78,15 +79,29 @@
   <div class="grid" id="design-container"></div>
   <script>
     const qrFiles = [
-      { file: 'views-qr/view-qr1.png', title: 'Classic Design' },
-      { file: 'views-qr/view-qr2.png', title: 'Modern Look' },
-      { file: 'views-qr/view-qr3.png', title: 'Minimalistic Style' },
-      { file: 'views-qr/view-qr4.png', title: 'Futuristic Theme' }
+      {
+        file: 'views-qr/view-qr1.png',
+        title: 'Modern Look',
+        description: 'Передаёт чувство профессионализма и прогрессивности. Подходит для технологических стартапов и брендов, которые хотят подчеркнуть инновации.'
+      },
+      {
+        file: 'views-qr/view-qr2.png',
+        title: 'Classic Design',
+        description: 'Символизирует доверие и надёжность. Отлично подойдёт для банков, юридических фирм и компаний с устоявшейся репутацией.'
+      },
+      {
+        file: 'views-qr/view-qr3.png',
+        title: 'Minimalistic Style',
+        description: 'Дышит простотой и элегантностью. Прекрасно подходит для люксовых продуктов или тех, кто ценит минимализм и фокус.'
+      },
+      {
+        file: 'views-qr/view-qr4.png',
+        title: 'Futuristic Theme',
+        description: 'Воплощает креативность и новаторство. Создан для гейминга, технологичных продуктов и ивентов, которые вдохновляют.'
+      }
     ];
 
     const designContainer = document.getElementById('design-container');
-
-   
 
     qrFiles.forEach((qr, index) => {
       const card = document.createElement('div');
@@ -96,6 +111,7 @@
         <div class="qr-preview">
           <img src="${qr.file}" alt="QR Design ${index + 1}">
         </div>
+        <p class="qr-description">${qr.description}</p>
         <button class="select-button" onclick="selectDesign('${qr.file}')">Выбрать</button>
       `;
       designContainer.appendChild(card);
@@ -104,9 +120,7 @@
     function selectDesign(filePath) {
       // Сохраняем путь в localStorage с ключом 'qrDesign'
       localStorage.setItem('qrDesign', filePath);
-
       console.log('Selected Design Path:', filePath); // Логируем путь
-
       // Переход на следующую страницу
       window.location.href = 'background_shape_picker.html';
     }

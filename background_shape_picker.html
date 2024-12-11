@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Shape Picker</title>
   <style>
     body {
@@ -19,91 +18,124 @@
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(2, 1fr); /* Максимум два элемента в ряду */
       gap: 20px;
       justify-content: center;
-      align-items: center;
+      align-items: start;
     }
     .card {
       background-color: #fff;
       border-radius: 15px;
       box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-      text-align: center;
-      padding: 20px;
+      padding: 15px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
       box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     }
     .qr-preview {
       width: 100%;
-      padding-bottom: 100%;
-      background-size: cover;
-      background-position: center;
-      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 15px;
-      position: relative;
     }
-    /* Ободок для белого QR-кода */
-    .qr-preview[style*="white_square.png"] {
-      border: 2px solid #000000;
+    .qr-preview img {
+      max-width: 100%;
+      height: auto;
+    }
+    .shape-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+    .shape-description {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
     }
     .select-button {
-      background-color: #000000;
+      background-color: #000;
       color: #fff;
       border: none;
       border-radius: 10px;
-      padding: 12px 20px;
+      padding: 10px 15px;
       cursor: pointer;
       font-size: 14px;
       font-weight: bold;
       transition: background-color 0.2s ease, transform 0.2s ease;
+      width: 100%;
     }
     .select-button:hover {
-      background-color: #000000;
+      background-color: #333;
       transform: translateY(-2px);
-    }
-    .select-button:active {
-      background-color: #535353;
-      transform: translateY(0);
     }
   </style>
 </head>
 <body>
-  <h1>Choose Your Shape</h1>
+  <h1>Выберите Форму QR-Кода</h1>
   <div class="grid" id="shape-container"></div>
   <script>
     const shapeFiles = [
-      'shapes/black_square.png',
-      'shapes/gray_square.png',
-      'shapes/white_square.png'
-    ]; // Список шейпов
+      {
+        file: 'shapes/black_square.png',
+        additionalField: false,
+        name: 'Black Cube',
+        description: 'Эталон строгости — подчёркивает статус и минимализм.'
+      },
+      {
+        file: 'shapes/white_square.png',
+        additionalField: false,
+        name: 'White Prism',
+        description: 'Светлая чистота, которая бросается в глаза.'
+      },
+      {
+        file: 'shapes/black_square_plus.png',
+        additionalField: true,
+        name: 'Black Edge Pro',
+        description: 'Больше простора для контента в эффектном чёрном стиле.'
+      },
+      {
+        file: 'shapes/white_square_plus.png',
+        additionalField: true,
+        name: 'White Horizon',
+        description: 'Идеальный баланс: современность и пространство для вашего послания.'
+      },
+      {
+        file: 'shapes/black_rectangle_advance.png',
+        additionalField: true,
+        name: 'Shadow Banner',
+        description: 'Длинный формат, чтобы выделить главное — лаконично и заметно.'
+      },
+      {
+        file: 'shapes/white_rectangle_advance.png',
+        additionalField: true,
+        name: 'Bright Scroll',
+        description: 'Расширьте границы творчества с минимализмом и стилем.'
+      }
+    ];
 
     const shapeContainer = document.getElementById('shape-container');
 
-    // Создаём элементы выбора формы
-    shapeFiles.forEach((shapeFile) => {
+    shapeFiles.forEach((shape) => {
       const card = document.createElement('div');
       card.className = 'card';
+
       card.innerHTML = `
-        <div class="qr-preview" style="background-image: url('${shapeFile}')">
+        <div class="qr-preview">
+          <img src="${shape.file}" alt="${shape.name}">
         </div>
-        <button class="select-button" onclick="selectShape('${shapeFile}')">Выбрать</button>
+        <div class="shape-name">${shape.name}</div>
+        <div class="shape-description">${shape.description}</div>
+        <button class="select-button" onclick="selectShape('${shape.file}', ${shape.additionalField})">Выбрать</button>
       `;
       shapeContainer.appendChild(card);
     });
 
-    function selectShape(shapePath) {
-      // Удаляем старое значение
-      localStorage.removeItem('backgroundShape');
-
-      // Сохраняем только путь в ключ backgroundShape
+    function selectShape(shapePath, additionalField) {
       localStorage.setItem('backgroundShape', shapePath);
-
-      console.log('Сохранённый путь:', shapePath); // Логируем путь
-
-      // Переходим на страницу ввода данных
+      localStorage.setItem('requiresAdditionalField', additionalField);
       window.location.href = 'input_data.html';
     }
   </script>

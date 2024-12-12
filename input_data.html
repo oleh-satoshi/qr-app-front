@@ -71,26 +71,22 @@
         <label for="qrLink">Target Link</label>
         <input type="url" id="qrLink" name="qrLink" placeholder="Enter the target URL" required>
       </div>
-      <div class="form-group" id="additionalFieldGroup" style="display: none;">
+      <div class="form-group">
         <label for="qrText">QR Code Text</label>
-        <input type="text" id="qrText" name="qrText" placeholder="Enter additional text">
+        <input type="text" id="qrText" name="qrText" placeholder="Enter additional text" required>
       </div>
       <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Create QR</button>
     </form>
   </div>
   <script>
-    const requiresAdditionalField = localStorage.getItem('requiresAdditionalField') === 'true';
-    const additionalFieldGroup = document.getElementById('additionalFieldGroup');
-    if (requiresAdditionalField) {
-      additionalFieldGroup.style.display = 'block';
-    }
-
     const qrNameInput = document.getElementById('qrName');
     const qrLinkInput = document.getElementById('qrLink');
+    const qrTextInput = document.getElementById('qrText'); // Получаем ссылку на третье поле
     const createButton = document.getElementById('createButton');
 
     function updateButtonState() {
-      if (qrNameInput.value.trim() && qrLinkInput.value.trim()) {
+      // Проверяем, заполнены ли все три поля
+      if (qrNameInput.value.trim() && qrLinkInput.value.trim() && qrTextInput.value.trim()) {
         createButton.disabled = false;
       } else {
         createButton.disabled = true;
@@ -99,11 +95,12 @@
 
     qrNameInput.addEventListener('input', updateButtonState);
     qrLinkInput.addEventListener('input', updateButtonState);
+    qrTextInput.addEventListener('input', updateButtonState); // Добавляем обработчик события для третьего поля
 
     async function createQRCode() {
       const qrName = qrNameInput.value.trim();
       const qrLink = qrLinkInput.value.trim();
-      const qrText = requiresAdditionalField ? document.getElementById('qrText').value.trim() : null;
+      const qrText = qrTextInput.value.trim(); // Получаем значение из третьего поля
 
       const qrData = {
         backgroundShape: localStorage.getItem('backgroundShape'),
@@ -114,26 +111,26 @@
         additionalText: qrText
       };
 
+      console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
       try {
         const response = await fetch('https://oleh-satoshi.github.io/qr-app-front?telegramId=601575485/qr-codes', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(qrData)
+          body: JSON.stringify(qrData),
         });
 
         if (response.ok) {
           const responseData = await response.json();
-          console.log('Server response:', responseData);
+          console.log('Ответ сервера:', responseData);
           alert('QR Code successfully created!');
         } else {
-          console.error('Server error:', response.statusText);
+          console.error('Ошибка сервера:', response.statusText);
           alert('Failed to create QR Code.');
         }
       } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred while creating QR Code.');
+        console.error('Ошибка в процессе запроса:', error);
       }
     }
   </script>

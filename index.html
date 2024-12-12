@@ -1,118 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Layout</title>
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .dashboard {
-            background: #fff;
-            border-radius: 15px;
-            padding: 20px;
-            width: 100%;
-            max-width: 1000px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .stat {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f4f4f4;
-            padding: 20px;
-            border-radius: 12px;
-            position: relative;
-        }
-        .stat-left {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .stat-text {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #919191;
-            margin: 0;
-        }
-        .stat-value {
-            font-size: 5rem;
-            font-weight: 800;
-            margin: 0;
-            color: #000;
-            line-height: 1; /* Убираем лишние отступы */
-        }
-        .stat-icon {
-            width: 80px;
-            height: 80px;
-        }
-        .button {
-            display: inline-block;
-            padding: 15px;
-            background-color: #000;
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #333;
-        }
-        @media (max-width: 768px) {
-            .stat {
-                flex-direction: row;
-                padding: 15px;
-            }
-            .stat-text {
-                font-size: 1rem;
-            }
-            .stat-value {
-                font-size: 3rem;
-            }
-            .stat-icon {
-                width: 60px;
-                height: 60px;
-            }
-            .button {
-                font-size: 1rem;
-                padding: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 30px 20px;
+      background-color: #f9f9f9; /* Изменен цвет фона body */ 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Удалены стили для .container */ 
+
+    .dashboard-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #333333;
+      margin-bottom: 20px;
+    }
+
+    .scan-info { 
+      display: flex;
+      flex-direction: column; 
+      align-items: center; 
+      margin-bottom: 40px;
+    }
+
+    .scan-count {
+      font-size: 7rem;
+      font-weight: 700;
+      color: #333333;
+      line-height: 1; 
+    }
+
+    .scan-text {
+      font-size: 1.6rem;
+      color: #666666;
+    }
+
+    .create-button {
+      background-color: #000000;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 18px 36px;
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-weight: 600;
+      transition: background-color 0.2s ease, transform 0.2s ease;
+      width: 100%;
+      max-width: 300px; /* Ограничение ширины кнопки */
+    }
+
+    .create-button:hover {
+      background-color: #333333;
+      transform: translateY(-2px);
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="stat">
-            <div class="stat-left">
-                <p class="stat-text">Total<br>scanning:</p>
-            </div>
-            <h2 class="stat-value">800</h2>
-            <img src="shoes_icon.png" alt="Icon" class="stat-icon">
-        </div>
-        <a href="qr_shape_picker.html" class="button">Create QR</a>
+    <div class="scan-info">
+        <span class="scan-text" style="margin-bottom: 10px;">У вас</span>
+      <span class="scan-count">800</span>
+      <span class="scan-text" >сканирований всего</span>
     </div>
+    <button class="create-button"onclick="window.location.href='qr_shape_picker.html'">Создать QR</button>
+
+
     <script>
         // Функция для извлечения параметров из URL
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return {
-                telegramId: params.get('telegramId')
+                telegramId: params.get('telegramId'),
+                lang: params.get('lang')
             };
         }
 
@@ -122,13 +91,18 @@
         // Извлекаем параметры из URL
         const params = getQueryParams();
 
-        // Сохраняем параметр telegramId в localStorage
+        // Сохраняем параметры в localStorage, если они существуют
         if (params.telegramId) {
             localStorage.setItem('telegramId', params.telegramId);
-            console.log('Telegram ID сохранён:', params.telegramId);
-        } else {
-            console.log('Telegram ID отсутствует в параметрах URL.');
         }
+        if (params.lang) {
+            localStorage.setItem('lang', params.lang);
+        }
+
+        console.log('Saved to localStorage:', {
+            telegramId: params.telegramId,
+            lang: params.lang
+        });
     </script>
 </body>
 </html>

@@ -1,83 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Create QR Code</title>
+  <title>Создать QR-код</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #f1f5f9;
+      background-color: #f4f4f4; 
     }
+
     h1 {
       font-size: 24px;
       color: #333;
       margin-bottom: 20px;
       text-align: center;
     }
+
     .form-container {
       background-color: #fff;
       border-radius: 15px;
       box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
       max-width: 400px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 20px; 
     }
+
     .form-group {
       margin-bottom: 20px;
     }
+
     .form-group label {
       display: block;
-      font-size: 14px;
+      font-size: 16px; 
       color: #333;
       margin-bottom: 8px;
     }
-    .form-group input {
+
+    .form-group input,
+    .form-group textarea {
       width: 100%;
-      padding: 10px;
+      padding: 10px; 
       border: 1px solid #ddd;
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 16px; 
+      box-sizing: border-box;
     }
+
+    .form-group textarea {
+      height: 100px; 
+      resize: vertical;
+    }
+
     .create-button {
-      background-color: #007bff;
+      background-color: #333;
       color: #fff;
       border: none;
       border-radius: 8px;
-      padding: 12px;
+      padding: 12px 20px; 
       cursor: pointer;
-      font-size: 16px;
+      font-size: 18px; 
       font-weight: bold;
       transition: background-color 0.2s ease;
       width: 100%;
     }
+
     .create-button:disabled {
       background-color: #ccc;
       cursor: not-allowed;
     }
   </style>
 </head>
+
 <body>
-  <h1>Create Your QR Code</h1>
+  <h1>Создайте свой QR-код</h1>
   <div class="form-container">
     <form id="qrForm">
       <div class="form-group">
-        <label for="qrName">QR Code Name</label>
-        <input type="text" id="qrName" name="qrName" placeholder="Enter QR code name" required>
+        <label for="qrName">Название QR-кода</label>
+        <input type="text" id="qrName" name="qrName" required>
       </div>
       <div class="form-group">
-        <label for="qrLink">Target Link</label>
-        <input type="url" id="qrLink" name="qrLink" placeholder="Enter the target URL" required>
+        <label for="qrLink">Ссылка</label>
+        <input type="url" id="qrLink" name="qrLink"  required>
       </div>
       <div class="form-group">
-        <label for="qrText">QR Code Text</label>
-        <input type="text" id="qrText" name="qrText" placeholder="Enter additional text" required>
+        <label for="qrText">Дополнительный текст</label>
+        <textarea id="qrText" name="qrText" required></textarea>
       </div>
-      <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Create QR</button>
+      <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Создать
+        QR-код</button>
     </form>
   </div>
+
   <script>
     const qrNameInput = document.getElementById('qrName');
     const qrLinkInput = document.getElementById('qrLink');
@@ -108,7 +125,7 @@
         telegramId: localStorage.getItem('telegramId'),
         name: qrName,
         link: qrLink,
-        extraText: qrText
+        additionalText: qrText
       };
 
       console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));

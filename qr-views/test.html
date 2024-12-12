@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Styling</title>
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling/lib/qr-code-styling.min.js"></script>
+</head>
+<body>
+<div id="qrcode"></div>
+<script>
+    const qrSettings = {"type":"canvas","shape":"square","width":500,"height":500,"data": "fg","margin":15,"qrOptions":{"typeNumber":"0","mode":"Byte","errorCorrectionLevel":"H"},"imageOptions":{"saveAsBlob":true,"hideBackgroundDots":true,"imageSize":0.4,"margin":0},"dotsOptions":{"type":"rounded","color":"#000000","roundSize":true},"backgroundOptions":{"round":0,"color":"transparent"},"image":null,"dotsOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#6a1a4c","color2":"#6a1a4c","rotation":"0"}},"cornersSquareOptions":{"type":"","color":"#000000"},"cornersSquareOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#000000","color2":"#000000","rotation":"0"}},"cornersDotOptions":{"type":"","color":"#000000"},"cornersDotOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#000000","color2":"#000000","rotation":"0"}},"backgroundOptionsHelper":{"colorType":{"single":true,"gradient":false},"gradient":{"linear":true,"radial":false,"color1":"#ffffff","color2":"#ffffff","rotation":"0"}}};
+    const qrCode = new QRCodeStyling(qrSettings);
+    qrCode.append(document.getElementById("qrcode"));
+</script>
+</body>
+</html>

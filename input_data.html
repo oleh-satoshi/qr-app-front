@@ -108,12 +108,12 @@
         telegramId: localStorage.getItem('telegramId'),
         name: qrName,
         link: qrLink,
-        additionalText: qrText
+        extraText: qrText
       };
 
       console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
       try {
-        const response = await fetch('https://oleh-satoshi.github.io/qr-app-front/qr-codes', {
+        const response = await fetch('https://eb94-2601-244-4604-a1f0-e913-a7c6-44c5-e08a.ngrok-free.app/qr-codes/create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

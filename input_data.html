@@ -141,7 +141,7 @@
         if (response.ok) {
           const responseData = await response.json();
           console.log('Ответ сервера:', responseData);
-          alert('QR Code successfully created!');
+          alert('QR код будет отправлен в личные сообщения как только будет готов.');
         } else {
           console.error('Ошибка сервера:', response.statusText);
           alert('Failed to create QR Code.');

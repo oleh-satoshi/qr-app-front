@@ -11,14 +11,12 @@
       padding: 20px;
       background-color: #f1f5f9;
     }
-
     h1 {
       font-size: 24px;
       color: #333;
       margin-bottom: 20px;
       text-align: center;
     }
-
     .grid {
       display: grid;
       grid-template-columns: 1fr; /* Одна колонка для телефонов */
@@ -26,7 +24,6 @@
       justify-content: center;
       align-items: start;
     }
-
     .card {
       background-color: #fff;
       border-radius: 15px;
@@ -34,12 +31,10 @@
       padding: 15px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .card:hover {
       transform: scale(1.03);
       box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.25);
     }
-
     .qr-preview {
       width: 100%;
       display: flex;
@@ -47,26 +42,22 @@
       align-items: center;
       margin-bottom: 15px;
     }
-
     .qr-preview img {
       max-width: 100%;
       height: auto;
     }
-
     .shape-name {
       font-size: 18px;
       font-weight: bold;
       margin: 5px 0;
       text-align: center;
     }
-
     .shape-description {
       font-size: 14px;
       color: #555;
       margin-bottom: 10px;
       text-align: center;
     }
-
     .select-button {
       background-color: #000;
       color: #fff;
@@ -79,7 +70,6 @@
       transition: background-color 0.2s ease, transform 0.2s ease;
       width: 100%;
     }
-
     .select-button:hover {
       background-color: #333;
       transform: translateY(-2px);
@@ -106,24 +96,28 @@
       {
         file: 'shapes/black_square_plus.png',
         additionalField: true,
+        additionalText: 'texts/poppins_50_white.svg',
         name: 'Black Edge Pro',
         description: 'Больше простора для контента в эффектном чёрном стиле.'
       },
       {
         file: 'shapes/white_square_plus.png',
         additionalField: true,
+        additionalText: 'texts/poppins_50_black.svg',
         name: 'White Horizon',
         description: 'Идеальный баланс: современность и пространство для вашего послания.'
       },
       {
         file: 'shapes/black_rectangle_advance.png',
         additionalField: true,
+        additionalText: 'texts/poppins_88_white.svg',
         name: 'Shadow Banner',
         description: 'Длинный формат, чтобы выделить главное — лаконично и заметно.'
       },
       {
         file: 'shapes/white_rectangle_advance.png',
         additionalField: true,
+        additionalText: 'texts/poppins_88_black.svg',
         name: 'Bright Scroll',
         description: 'Расширьте границы творчества с минимализмом и стилем.'
       }
@@ -139,14 +133,19 @@
         </div>
         <div class="shape-name">${shape.name}</div>
         <div class="shape-description">${shape.description}</div>
-        <button class="select-button" onclick="selectShape('${shape.file}', ${shape.additionalField})">Выбрать</button>
+        <button class="select-button" onclick="selectShape('${shape.file}', ${shape.additionalField}, '${shape.additionalText || ''}')">Выбрать</button>
       `;
       shapeContainer.appendChild(card);
     });
 
-    function selectShape(shapePath, additionalField) {
+    function selectShape(shapePath, additionalField, additionalText) {
       localStorage.setItem('backgroundShape', shapePath);
       localStorage.setItem('requiresAdditionalField', additionalField);
+      if (additionalText) {
+        localStorage.setItem('additionalText', additionalText);
+      } else {
+        localStorage.removeItem('additionalText');
+      }
       window.location.href = 'input_data.html';
     }
   </script>

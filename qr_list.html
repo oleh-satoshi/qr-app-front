@@ -17,18 +17,42 @@
             color: #333;
         }
 
-        /* Баннер с градиентом */
-        .notification {
-            background: linear-gradient(to right, #ff9a9e, #fad0c4, #fbc2eb);
-            color: #333;
-            text-align: center;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
+       /* Баннер с градиентом */
+/* Анимированный градиентный баннер */
+.notification {
+    background: linear-gradient(to right, #667eea, #764ba2, #6b8dd6, #667eea);
+    background-size: 400% 100%;
+    animation: gradientAnimation 15s linear infinite;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3); /* Добавлена тень для текста */
+    /* Белый текст для контраста на темном фоне */
+    padding: 20px; /* Увеличили отступы для большего пространства */
+    border-radius: 12px; /* Увеличили скругление углов */
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Более мягкая тень */
+    display: flex;
+    align-items: center;
+    font-family: sans-serif; /* Добавили шрифт для лучшей читаемости */
+}
 
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.notification-text {
+    text-align: left;
+    width: 100%;
+    font-size: 1.1rem; /* Увеличили размер текста */
+    line-height: 1.4; /* Увеличили межстрочный интервал */
+}
         #qrList {
             display: flex;
             flex-direction: column;
@@ -136,10 +160,11 @@
 <body>
     <h1>Ваши QR-коды</h1>
 
-    <!-- Баннер с градиентом -->
     <div class="notification">
-        Как только QR-код был сгенерирован, вы всё равно можете изменить ссылку, куда он ведёт. <br>
-        Это позволяет не переделывать ваши креативы, дизайны или распечатанные материалы.
+        <div class="notification-text">
+            Как только QR-код был сгенерирован, вы всё равно можете изменить ссылку, куда он ведёт.<br>
+            Это позволяет не переделывать ваши креативы, дизайны или распечатанные материалы.
+        </div>
     </div>
 
     <!-- Список QR-кодов -->

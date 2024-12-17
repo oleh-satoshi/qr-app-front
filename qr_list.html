@@ -44,9 +44,28 @@
             pointer-events: none;
         }
 
+        /* Мягкий шлейф */
+        .notification::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255, 0, 0, 0.2), transparent);
+            filter: blur(5px);
+            animation: softLaser 5s linear infinite;
+            animation-delay: 0.5s;
+            pointer-events: none;
+        }
+
         @keyframes softLaser {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% {
+                left: -100%;
+            }
+            100% {
+                left: 100%;
+            }
         }
 
         #qrList {
@@ -63,8 +82,14 @@
             padding: 15px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qr-info {
+            display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 5px;
         }
 
         .qr-actions {
@@ -88,23 +113,6 @@
             background-color: #d9534f;
         }
 
-        .edit-form {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .edit-form input {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .save-btn {
-            background-color: #5cb85c;
-        }
-
         .btn:hover {
             opacity: 0.8;
         }
@@ -120,7 +128,7 @@
 <body>
     <h1>Ваши QR-коды</h1>
 
-    <!-- Уведомление -->
+    <!-- Уведомление для пользователя с мягким лазером -->
     <div class="notification">
         Как только QR-код был сгенерирован, вы всё равно можете изменить ссылку, куда он ведёт.
         Это позволяет не переделывать ваши креативы, дизайны или распечатанные материалы.
@@ -137,18 +145,23 @@
                 const telegramId = localStorage.getItem('telegramId') || getTelegramIdFromUrl();
 
                 if (!telegramId) {
+                    console.error("Telegram ID отсутствует");
                     document.getElementById('emptyPlaceholder').innerText = "Ошибка: отсутствует Telegram ID!";
                     return;
                 }
 
-                const response = await fetch(`https://your-endpoint.ngrok-free.app/qr-codes?telegramId=${telegramId}`, {
+                const response = await fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes?telegramId=${telegramId}`, {
                     method: "GET",
                     headers: { "ngrok-skip-browser-warning": "true" }
                 });
 
-                qrCodes = await response.json();
+                const text = await response.text();
+                console.log('Ответ сервера:', text);
+
+                qrCodes = JSON.parse(text);
                 renderQRList();
             } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
                 document.getElementById('emptyPlaceholder').innerText = "Ошибка загрузки данных!";
             }
         }
@@ -160,30 +173,31 @@
 
         function renderQRList() {
             const qrList = document.getElementById('qrList');
+            const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+
             qrList.innerHTML = '';
 
-            qrCodes.forEach(qr => {
-                const qrItem = document.createElement('div');
-                qrItem.className = 'qr-item';
-
-                qrItem.innerHTML = `
-                    <div class="qr-info">
-                        <strong>${qr.name || 'Без названия'}</strong>
-                        <span>Ссылка: <a href="${qr.link}" target="_blank">${qr.link || 'Нет ссылки'}</a></span>
-                        <span>Сканирований: ${qr.scanNumber || 0}</span>
-                    </div>
-                    <div class="qr-actions">
-                        <button class="btn btn-edit" onclick="showEditForm(${qr.id})">Редактировать</button>
-                        <button class="btn btn-delete" onclick="deleteQRCode(${qr.id})">Удалить</button>
-                    </div>
-                    <div class="edit-form" id="edit-form-${qr.id}">
-                        <input type="text" id="edit-name-${qr.id}" value="${qr.name || ''}" placeholder="Название">
-                        <input type="text" id="edit-link-${qr.id}" value="${qr.link || ''}" placeholder="Ссылка">
-                        <button class="btn save-btn" onclick="saveEdit(${qr.id})">Сохранить</button>
-                    </div>
-                `;
-                qrList.appendChild(qrItem);
-            });
+            if (qrCodes.length === 0) {
+                emptyPlaceholder.style.display = 'block';
+            } else {
+                emptyPlaceholder.style.display = 'none';
+                qrCodes.forEach(qr => {
+                    const qrItem = document.createElement('div');
+                    qrItem.className = 'qr-item';
+                    qrItem.innerHTML = `
+                        <div class="qr-info">
+                            <strong>${qr.name || 'Без названия'}</strong>
+                            <span>Ссылка: <a href="${qr.link || '#'}" target="_blank">${qr.link || 'Нет ссылки'}</a></span>
+                            <span>Сканирований: ${qr.scanNumber || 0}</span>
+                        </div>
+                        <div class="qr-actions">
+                            <button class="btn btn-edit" onclick="editQRCode(${qr.id})">Редактировать</button>
+                            <button class="btn btn-delete" onclick="deleteQRCode(${qr.id})">Удалить</button>
+                        </div>
+                    `;
+                    qrList.appendChild(qrItem);
+                });
+            }
         }
 
         function showEditForm(id) {
@@ -195,7 +209,7 @@
             const newName = document.getElementById(`edit-name-${id}`).value;
             const newLink = document.getElementById(`edit-link-${id}`).value;
 
-            fetch(`https://your-endpoint.ngrok-free.app/qr-codes/${id}`, {
+            fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
                 body: JSON.stringify({ name: newName, link: newLink })
@@ -211,12 +225,15 @@
 
         function deleteQRCode(id) {
             if (confirm("Вы действительно хотите удалить этот QR-код?")) {
-                fetch(`https://your-endpoint.ngrok-free.app/qr-codes/${id}`, {
+                fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
                     method: "DELETE",
                     headers: { "ngrok-skip-browser-warning": "true" }
                 }).then(response => {
                     if (response.ok) {
+                        alert("QR-код успешно удалён!");
                         loadQRCodes();
+                    } else {
+                        alert("Ошибка удаления QR-кода.");
                     }
                 });
             }

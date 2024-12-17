@@ -143,27 +143,53 @@
         }
 
         function editQRCode(id) {
-    const newName = prompt("Введите новое имя для QR-кода:");
-    const newLink = prompt("Введите новую ссылку для QR-кода:");
-    if (newName && newLink) {
-        fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "ngrok-skip-browser-warning": "true"
-            },
-            body: JSON.stringify({ name: newName, link: newLink })
-        })
-        .then(response => {
-            if (response.ok) {
-                alert("QR-код успешно обновлён!");
-                loadQRCodes(); // Перезагрузить список
-            } else {
-                alert("Ошибка обновления QR-кода.");
-            }
-        });
+    const editOption = prompt("Выберите, что хотите изменить:\n1 - Имя\n2 - Ссылку");
+
+    if (editOption === "1") {
+        const newName = prompt("Введите новое имя для QR-кода:");
+        if (newName) {
+            fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                },
+                body: JSON.stringify({ name: newName })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Имя QR-кода успешно обновлено!");
+                    loadQRCodes(); // Перезагрузить список
+                } else {
+                    alert("Ошибка обновления имени QR-кода.");
+                }
+            });
+        }
+    } else if (editOption === "2") {
+        const newLink = prompt("Введите новую ссылку для QR-кода:");
+        if (newLink) {
+            fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "ngrok-skip-browser-warning": "true"
+                },
+                body: JSON.stringify({ link: newLink })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Ссылка QR-кода успешно обновлена!");
+                    loadQRCodes(); // Перезагрузить список
+                } else {
+                    alert("Ошибка обновления ссылки QR-кода.");
+                }
+            });
+        }
+    } else {
+        alert("Неверный выбор. Введите 1 или 2.");
     }
 }
+
 
 function deleteQRCode(id) {
     if (confirm("Вы действительно хотите удалить этот QR-код?")) {

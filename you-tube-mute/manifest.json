@@ -1,0 +1,14 @@
+{
+    "manifest_version": 3,
+    "name": "YouTube Bad Words Muter",
+    "version": "1.0",
+    "description": "Мутит звук на YouTube, если в субтитрах обнаружены плохие слова.",
+    "permissions": ["activeTab"],
+    "content_scripts": [
+      {
+        "matches": ["*://*.youtube.com/*"],
+        "js": ["content.js"]
+      }
+    ]
+  }
+  

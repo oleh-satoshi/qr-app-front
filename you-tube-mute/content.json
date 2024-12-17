@@ -1,0 +1,13 @@
+const leoProfanity = require("leo-profanity");
+leoProfanity.add(leoProfanity.getDictionary("ru")); // Русский
+leoProfanity.add(leoProfanity.getDictionary("uk")); // Украинский
+leoProfanity.add(leoProfanity.getDictionary("en")); // Английский
+
+function containsBadWords(text) {
+  return leoProfanity.check(text);
+}
+
+function cleanBadWords(text) {
+  return leoProfanity.clean(text);
+}
+

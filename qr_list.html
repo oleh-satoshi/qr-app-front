@@ -74,18 +74,18 @@
         }
 
         /* Стили для модального окна */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        #modal {
+    display: none; /* Окно скрыто изначально */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
 
         .modal-content {
             background-color: #fff;
@@ -105,6 +105,18 @@
             border-radius: 5px;
         }
 
+        #overlay {
+    display: none; /* Затенение страницы */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+
         .btn-save {
             background-color: #5cb85c;
             color: #fff;
@@ -121,16 +133,15 @@
     <div id="qrList"></div>
     <div class="empty-placeholder" id="emptyPlaceholder">У вас пока нет QR-кодов. Создайте первый!</div>
 
-    <!-- Модальное окно для редактирования -->
-    <div class="modal" id="editModal">
-        <div class="modal-content">
-            <h3>Редактирование QR-кода</h3>
-            <input type="text" id="edit-name" placeholder="Имя QR-кода">
-            <input type="text" id="edit-link" placeholder="Ссылка QR-кода">
-            <button class="btn btn-save" onclick="saveEdit()">Сохранить</button>
-            <button class="btn btn-cancel" onclick="closeModal()">Отменить</button>
-        </div>
-    </div>
+    <div id="overlay" onclick="closeModal()"></div>
+<div id="modal">
+    <h3>Редактирование QR-кода</h3>
+    <input id="edit-name" type="text" placeholder="Имя QR-кода" />
+    <input id="edit-link" type="text" placeholder="Ссылка QR-кода" />
+    <button id="save-btn" onclick="saveEdit(this.getAttribute('data-id'))">Сохранить</button>
+    <button onclick="closeModal()">Отменить</button>
+</div>
+
 
     <script>
         let qrCodes = []; // Список QR-кодов
@@ -138,6 +149,9 @@
 
         async function loadQRCodes() {
             try {
+                document.getElementById('modal').style.display = 'none';
+document.getElementById('overlay').style.display = 'none';
+
                 const telegramId = localStorage.getItem('telegramId') || getTelegramIdFromUrl();
                 if (!telegramId) {
                     console.error("Telegram ID отсутствует");
@@ -203,6 +217,23 @@
             currentEditId = null;
             document.getElementById('editModal').style.display = 'none';
         }
+
+        function openModal(id) {
+    const qrCode = qrCodes.find(qr => qr.id === id);
+    document.getElementById('edit-name').value = qrCode.name || '';
+    document.getElementById('edit-link').value = qrCode.link || '';
+    document.getElementById('save-btn').setAttribute('data-id', id);
+
+    // Показать модалку и overlay
+    document.getElementById('modal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
+
 
         function saveEdit() {
             const newName = document.getElementById('edit-name').value;

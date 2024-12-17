@@ -150,19 +150,7 @@
             };
 
             console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
-
-            try {
-                const response = await fetch('https://cadd-2601-244-4604-a1f0-157b-3744-c184-6093.ngrok-free.app/qr-codes/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(qrData),
-                });
-
-                if (response.ok) {
-                    console.log('Ответ сервера:', await response.json());
-
+                    
                     createButton.disabled = true;
                     createButton.style.backgroundColor = '#4CAF50';
                     createButton.style.color = 'white';
@@ -176,7 +164,6 @@
                         ticks: 60,
                         zIndex: 0
                     };
-
                     function randomInRange(min, max) {
                         return Math.random() * (max - min) + min;
                     }
@@ -200,6 +187,55 @@
                             origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
                         }));
                     }, 250);
+            try {
+                const response = await fetch('https://cadd-2601-244-4604-a1f0-157b-3744-c184-6093.ngrok-free.app/qr-codes/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(qrData),
+                });
+
+                if (response.ok) {
+                    console.log('Ответ сервера:', await response.json());
+
+                    // createButton.disabled = true;
+                    // createButton.style.backgroundColor = '#4CAF50';
+                    // createButton.style.color = 'white';
+                    // createButton.style.cursor = 'default';
+                    // createButton.innerText = 'QR-код будет отправлен в личные сообщения в Telegram!';
+
+                    // const confettiConfig = {
+                    //     particleCount: 100,
+                    //     startVelocity: 30,
+                    //     spread: 360,
+                    //     ticks: 60,
+                    //     zIndex: 0
+                    // };
+
+                    // function randomInRange(min, max) {
+                    //     return Math.random() * (max - min) + min;
+                    // }
+
+                    // const duration = 3000;
+                    // const animationEnd = Date.now() + duration;
+                    // const interval = setInterval(() => {
+                    //     const timeLeft = animationEnd - Date.now();
+
+                    //     if (timeLeft <= 0) {
+                    //         return clearInterval(interval);
+                    //     }
+
+                    //     const particleCount = 50 * (timeLeft / duration);
+                    //     confetti(Object.assign({}, confettiConfig, {
+                    //         particleCount,
+                    //         origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                    //     }));
+                    //     confetti(Object.assign({}, confettiConfig, {
+                    //         particleCount,
+                    //         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                    //     }));
+                    // }, 250);
                 } else {
                     console.error('Ошибка сервера:', response.status, response.statusText);
                 }

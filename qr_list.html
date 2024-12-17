@@ -59,36 +59,38 @@
 
         async function loadQRCodes() {
     try {
-        // Получаем telegramId из localStorage или параметра URL
+        // Получаем telegramId из localStorage или параметров URL
         const telegramId = localStorage.getItem('telegramId') || getTelegramIdFromUrl();
-        
+
         if (!telegramId) {
             console.error("Telegram ID отсутствует");
             document.getElementById('emptyPlaceholder').innerText = "Ошибка: отсутствует Telegram ID!";
             return;
         }
 
-        // GET-запрос с telegramId как параметром
-        const response = await fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes?telegramId=${telegramId}`);
-        const text = await response.text(); // Получаем текстовый ответ для отладки
-        console.log('Ответ сервера:', text); // Логируем ответ сервера в консоль
+        // GET-запрос с telegramId и заголовком для обхода страницы подтверждения ngrok
+        const response = await fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes?telegramId=${telegramId}`, {
+            method: "GET",
+            headers: {
+                "ngrok-skip-browser-warning": "true" // Добавляем заголовок
+            }
+        });
 
-        try {
-            // Пробуем парсить JSON
-            const json = JSON.parse(text);
-            qrCodes = json; // Заполняем список QR-кодов
-            renderQRList(); // Рендерим данные
-        } catch (error) {
-            console.error('Ошибка парсинга JSON:', error);
-            document.getElementById('emptyPlaceholder').innerText = "Ошибка: некорректные данные!";
-        }
+        // Получаем текстовый ответ для отладки
+        const text = await response.text();
+        console.log('Ответ сервера:', text);
+
+        // Парсим JSON и обрабатываем данные
+        const json = JSON.parse(text);
+        qrCodes = json;
+        renderQRList();
     } catch (error) {
         console.error('Ошибка загрузки данных:', error);
         document.getElementById('emptyPlaceholder').innerText = "Ошибка загрузки данных!";
     }
 }
 
-
+// Функция для извлечения telegramId из параметров URL
 function getTelegramIdFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return params.get('telegramId');

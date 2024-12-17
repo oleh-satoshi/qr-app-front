@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список QR-кодов</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #qrList {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .qr-item {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .qr-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .empty-placeholder {
+            text-align: center;
+            color: #777;
+            font-size: 1.2rem;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ваши QR-коды</h1>
+    <div id="qrList"></div>
+    <div class="empty-placeholder" id="emptyPlaceholder">У вас пока нет QR-кодов. Создайте первый!</div>
+
+    <script>
+        let qrCodes = []; // Список QR-кодов (будет заменён реальными данными)
+
+        async function loadQRCodes() {
+            try {
+                // Тестовый GET-запрос (замени на свой URL API)
+                const response = await fetch('https://cadd-2601-244-4604-a1f0-157b-3744-c184-6093.ngrok-free.app/qr-codes');
+                if (!response.ok) throw new Error('Ошибка при загрузке QR-кодов');
+
+                qrCodes = await response.json();
+                renderQRList();
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('emptyPlaceholder').innerText = "Ошибка загрузки данных!";
+            }
+        }
+
+        function renderQRList() {
+            const qrList = document.getElementById('qrList');
+            const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+
+            qrList.innerHTML = ''; // Очистка списка
+
+            if (qrCodes.length === 0) {
+                // Если список пуст, показываем заглушку
+                emptyPlaceholder.style.display = 'block';
+            } else {
+                emptyPlaceholder.style.display = 'none';
+                qrCodes.forEach(qr => {
+                    const qrItem = document.createElement('div');
+                    qrItem.className = 'qr-item';
+                    qrItem.innerHTML = `
+                        <div class="qr-info">
+                            <strong>${qr.name}</strong>
+                            <span>Ссылка: <a href="${qr.link}" target="_blank">${qr.link}</a></span>
+                            <span>Сканирований: ${qr.scans}</span>
+                        </div>
+                    `;
+                    qrList.appendChild(qrItem);
+                });
+            }
+        }
+
+        loadQRCodes(); // Загрузка данных
+    </script>
+</body>
+</html>

@@ -143,7 +143,6 @@
         async function loadQRCodes() {
             try {
                 const telegramId = localStorage.getItem('telegramId') || getTelegramIdFromUrl();
-
                 if (!telegramId) {
                     console.error("Telegram ID отсутствует");
                     document.getElementById('emptyPlaceholder').innerText = "Ошибка: отсутствует Telegram ID!";
@@ -156,8 +155,6 @@
                 });
 
                 const text = await response.text();
-                console.log('Ответ сервера:', text);
-
                 qrCodes = JSON.parse(text);
                 renderQRList();
             } catch (error) {
@@ -174,7 +171,6 @@
         function renderQRList() {
             const qrList = document.getElementById('qrList');
             const emptyPlaceholder = document.getElementById('emptyPlaceholder');
-
             qrList.innerHTML = '';
 
             if (qrCodes.length === 0) {
@@ -191,8 +187,13 @@
                             <span>Сканирований: ${qr.scanNumber || 0}</span>
                         </div>
                         <div class="qr-actions">
-                            <button class="btn btn-edit" onclick="editQRCode(${qr.id})">Редактировать</button>
+                            <button class="btn btn-edit" onclick="showEditForm(${qr.id}, '${qr.name}', '${qr.link}')">Редактировать</button>
                             <button class="btn btn-delete" onclick="deleteQRCode(${qr.id})">Удалить</button>
+                        </div>
+                        <div class="edit-form" id="edit-form-${qr.id}">
+                            <input type="text" id="edit-name-${qr.id}" placeholder="Имя QR-кода" value="${qr.name || ''}">
+                            <input type="text" id="edit-link-${qr.id}" placeholder="Ссылка QR-кода" value="${qr.link || ''}">
+                            <button class="save-btn" onclick="saveEdit(${qr.id})">Сохранить</button>
                         </div>
                     `;
                     qrList.appendChild(qrItem);
@@ -200,7 +201,7 @@
             }
         }
 
-        function showEditForm(id) {
+        function showEditForm(id, name, link) {
             const form = document.getElementById(`edit-form-${id}`);
             form.style.display = 'flex';
         }

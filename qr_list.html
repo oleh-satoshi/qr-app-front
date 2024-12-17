@@ -200,23 +200,19 @@
             }
         }
 
-        function editQRCode(id) {
-            const qrCode = qrCodes.find(qr => qr.id === id);
-            const newName = prompt("Введите новое имя для QR-кода:", qrCode.name || "");
-            const updatedData = {};
-            if (newName && newName !== qrCode.name) {
-                updatedData.name = newName;
-            }
+        function showEditForm(id) {
+            const form = document.getElementById(`edit-form-${id}`);
+            form.style.display = 'flex';
+        }
 
-            if (Object.keys(updatedData).length === 0) {
-                alert("Ничего не изменено.");
-                return;
-            }
+        function saveEdit(id) {
+            const newName = document.getElementById(`edit-name-${id}`).value;
+            const newLink = document.getElementById(`edit-link-${id}`).value;
 
             fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
-                body: JSON.stringify(updatedData)
+                body: JSON.stringify({ name: newName, link: newLink })
             }).then(response => {
                 if (response.ok) {
                     alert("QR-код успешно обновлён!");

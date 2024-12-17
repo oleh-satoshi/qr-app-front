@@ -73,30 +73,46 @@
             margin-top: 50px;
         }
 
-        .edit-form {
+        /* Стили для модального окна */
+        .modal {
             display: none;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .edit-form input {
-            padding: 5px;
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-content input {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        .save-btn {
+        .btn-save {
             background-color: #5cb85c;
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            color: #fff;
         }
 
-        .save-btn:hover {
-            opacity: 0.8;
+        .btn-cancel {
+            background-color: #d9534f;
+            color: #fff;
         }
     </style>
 </head>
@@ -105,8 +121,20 @@
     <div id="qrList"></div>
     <div class="empty-placeholder" id="emptyPlaceholder">У вас пока нет QR-кодов. Создайте первый!</div>
 
+    <!-- Модальное окно для редактирования -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <h3>Редактирование QR-кода</h3>
+            <input type="text" id="edit-name" placeholder="Имя QR-кода">
+            <input type="text" id="edit-link" placeholder="Ссылка QR-кода">
+            <button class="btn btn-save" onclick="saveEdit()">Сохранить</button>
+            <button class="btn btn-cancel" onclick="closeModal()">Отменить</button>
+        </div>
+    </div>
+
     <script>
         let qrCodes = []; // Список QR-кодов
+        let currentEditId = null;
 
         async function loadQRCodes() {
             try {
@@ -122,8 +150,7 @@
                     headers: { "ngrok-skip-browser-warning": "true" }
                 });
 
-                const text = await response.text();
-                qrCodes = JSON.parse(text);
+                qrCodes = await response.json();
                 renderQRList();
             } catch (error) {
                 console.error('Ошибка загрузки данных:', error);
@@ -139,6 +166,7 @@
         function renderQRList() {
             const qrList = document.getElementById('qrList');
             const emptyPlaceholder = document.getElementById('emptyPlaceholder');
+
             qrList.innerHTML = '';
 
             if (qrCodes.length === 0) {
@@ -155,13 +183,8 @@
                             <span>Сканирований: ${qr.scanNumber || 0}</span>
                         </div>
                         <div class="qr-actions">
-                            <button class="btn btn-edit" onclick="showEditForm(${qr.id}, '${qr.name}', '${qr.link}')">Редактировать</button>
+                            <button class="btn btn-edit" onclick="openEditModal(${qr.id}, '${qr.name}', '${qr.link}')">Редактировать</button>
                             <button class="btn btn-delete" onclick="deleteQRCode(${qr.id})">Удалить</button>
-                        </div>
-                        <div class="edit-form" id="edit-form-${qr.id}">
-                            <input type="text" id="edit-name-${qr.id}" placeholder="Имя QR-кода" value="${qr.name || ''}">
-                            <input type="text" id="edit-link-${qr.id}" placeholder="Ссылка QR-кода" value="${qr.link || ''}">
-                            <button class="save-btn" onclick="saveEdit(${qr.id})">Сохранить</button>
                         </div>
                     `;
                     qrList.appendChild(qrItem);
@@ -169,22 +192,30 @@
             }
         }
 
-        function showEditForm(id, name, link) {
-            const form = document.getElementById(`edit-form-${id}`);
-            form.style.display = 'flex';
+        function openEditModal(id, name, link) {
+            currentEditId = id;
+            document.getElementById('edit-name').value = name;
+            document.getElementById('edit-link').value = link;
+            document.getElementById('editModal').style.display = 'flex';
         }
 
-        function saveEdit(id) {
-            const newName = document.getElementById(`edit-name-${id}`).value;
-            const newLink = document.getElementById(`edit-link-${id}`).value;
+        function closeModal() {
+            currentEditId = null;
+            document.getElementById('editModal').style.display = 'none';
+        }
 
-            fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${id}`, {
+        function saveEdit() {
+            const newName = document.getElementById('edit-name').value;
+            const newLink = document.getElementById('edit-link').value;
+
+            fetch(`https://ceb2-2600-1008-b047-d1f4-dcb8-aabc-8bef-ef82.ngrok-free.app/qr-codes/${currentEditId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
                 body: JSON.stringify({ name: newName, link: newLink })
             }).then(response => {
                 if (response.ok) {
                     alert("QR-код успешно обновлён!");
+                    closeModal();
                     loadQRCodes();
                 } else {
                     alert("Ошибка обновления QR-кода.");

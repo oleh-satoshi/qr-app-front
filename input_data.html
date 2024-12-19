@@ -198,12 +198,25 @@
         qrLinkInput.addEventListener('input', updateButtonState);
 
         async function createQRCode() {
+            if (requiresAdditionalField === 'true' && !qrTextInput.value.trim()) {
+                alert('Пожалуйста, заполните дополнительное поле.');
+                return;
+            }
+
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
+            let qrText = null;
+            if (requiresAdditionalField === 'true') {
+                qrText = qrTextInput.value.trim();
+            }
 
             const qrData = {
+                backgroundShape: localStorage.getItem('backgroundShape'),
+                qrDesign: localStorage.getItem('qrDesign'),
+                telegramId: localStorage.getItem('telegramId'),
                 name: qrName,
-                link: qrLink
+                link: qrLink,
+                additionalText: qrText,
             };
 
             console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));

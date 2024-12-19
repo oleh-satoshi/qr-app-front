@@ -162,10 +162,17 @@
 
     <div class="after-buttons" id="afterButtons">
         <button onclick="location.href='index.html'">Вернуться на главную</button>
-        <button onclick="Telegram.WebApp.close();">Закрыть окно</button>
+        <button onclick="closeWebApp()">Закрыть окно</button>
     </div>
 
     <script>
+
+if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+        }
+    
+
+
         const qrNameInput = document.getElementById('qrName');
         const qrLinkInput = document.getElementById('qrLink');
         const createButton = document.getElementById('createButton');
@@ -279,6 +286,14 @@
                 console.error('Ошибка в процессе запроса:', error);
                 // При ошибке тоже можем показать кнопки, если нужно
                 afterButtons.style.display = 'block';
+            }
+        }
+
+        function closeWebApp() {
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                Telegram.WebApp.close();
+            } else {
+                console.log('Telegram.WebApp недоступен. Попробуйте открыть страницу через Telegram WebApp.');
             }
         }
     </script>

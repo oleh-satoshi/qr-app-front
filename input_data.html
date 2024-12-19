@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
+<head>    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,14 +12,12 @@
             padding: 20px;
             background-color: #f4f4f4;
         }
-
         h1 {
             font-size: 24px;
             color: #333;
             margin-bottom: 20px;
             text-align: center;
         }
-
         .form-container {
             background-color: #fff;
             border-radius: 15px;
@@ -28,18 +26,15 @@
             margin: 0 auto;
             padding: 20px;
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-group label {
             display: block;
             font-size: 16px;
             color: #333;
             margin-bottom: 8px;
         }
-
         .form-group input,
         .form-group textarea {
             width: 100%;
@@ -49,12 +44,10 @@
             font-size: 16px;
             box-sizing: border-box;
         }
-
         .form-group textarea {
             height: 100px;
             resize: vertical;
         }
-
         .create-button {
             background-color: #333;
             color: #fff;
@@ -67,10 +60,75 @@
             transition: background-color 0.2s ease;
             width: 100%;
         }
-
         .create-button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
+        }
+
+        /* Стиль для уведомления */
+        .success-banner {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        /* Баннер с таймером */
+        .countdown-banner {
+            position: relative;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #333;
+            color: #fff;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        /* Контейнер для лазера и цифры */
+        .laser-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Цифра по центру */
+        .countdown-number {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Лазер: тонкая красная линия со шлейфом */
+        .laser-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 2px;
+            background: linear-gradient(to right, rgba(255,0,0,0) 0%, rgba(255,0,0,1) 50%, rgba(255,0,0,0) 100%);
+            width: 100%;
+            z-index: 1;
+            animation: laserMove 1s linear infinite;
+        }
+
+        @keyframes laserMove {
+            0% { 
+                filter: blur(2px);
+                opacity: 1;
+            }
+            50% { 
+                opacity: 1; 
+            }
+            100% { 
+                opacity: 0;
+                filter: blur(0px);
+            }
         }
     </style>
 </head>
@@ -115,11 +173,9 @@
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
             let qrText = '';
-
             if (requiresAdditionalField && requiresAdditionalField === 'true') {
                 qrText = qrTextInput.value.trim();
             }
-
             createButton.disabled = !(qrName && qrLink && (requiresAdditionalField === 'false' || qrText));
         }
 
@@ -150,43 +206,43 @@
             };
 
             console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
-                    
-                    createButton.disabled = true;
-                    createButton.style.backgroundColor = '#4CAF50';
-                    createButton.style.color = 'white';
-                    createButton.style.cursor = 'default';
-                    createButton.innerText = 'QR-код будет отправлен в личные сообщения в Telegram!';
 
-                    const confettiConfig = {
-                        particleCount: 100,
-                        startVelocity: 30,
-                        spread: 360,
-                        ticks: 60,
-                        zIndex: 0
-                    };
-                    function randomInRange(min, max) {
-                        return Math.random() * (max - min) + min;
-                    }
+            createButton.disabled = true;
+            createButton.style.backgroundColor = '#4CAF50';
+            createButton.style.color = 'white';
+            createButton.style.cursor = 'default';
+            createButton.innerText = 'QR-код будет отправлен в личные сообщения в Telegram!';
 
-                    const duration = 3000;
-                    const animationEnd = Date.now() + duration;
-                    const interval = setInterval(() => {
-                        const timeLeft = animationEnd - Date.now();
+            const confettiConfig = {
+                particleCount: 100,
+                startVelocity: 30,
+                spread: 360,
+                ticks: 60,
+                zIndex: 0
+            };
 
-                        if (timeLeft <= 0) {
-                            return clearInterval(interval);
-                        }
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
 
-                        const particleCount = 50 * (timeLeft / duration);
-                        confetti(Object.assign({}, confettiConfig, {
-                            particleCount,
-                            origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-                        }));
-                        confetti(Object.assign({}, confettiConfig, {
-                            particleCount,
-                            origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-                        }));
-                    }, 250);
+            const duration = 3000;
+            const animationEnd = Date.now() + duration;
+            const interval = setInterval(() => {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, confettiConfig, {
+                    particleCount,
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+                }));
+                confetti(Object.assign({}, confettiConfig, {
+                    particleCount,
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+                }));
+            }, 250);
+
             try {
                 const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
                     method: 'POST',
@@ -195,47 +251,47 @@
                     },
                     body: JSON.stringify(qrData),
                 });
-
                 if (response.ok) {
                     console.log('Ответ сервера:', await response.json());
 
-                    // createButton.disabled = true;
-                    // createButton.style.backgroundColor = '#4CAF50';
-                    // createButton.style.color = 'white';
-                    // createButton.style.cursor = 'default';
-                    // createButton.innerText = 'QR-код будет отправлен в личные сообщения в Telegram!';
+                    // Добавляем зелёный баннер уведомления
+                    const successBanner = document.createElement('div');
+                    successBanner.classList.add('success-banner');
+                    successBanner.textContent = 'QR-код успешно отправлен в Telegram!';
 
-                    // const confettiConfig = {
-                    //     particleCount: 100,
-                    //     startVelocity: 30,
-                    //     spread: 360,
-                    //     ticks: 60,
-                    //     zIndex: 0
-                    // };
+                    document.body.appendChild(successBanner);
 
-                    // function randomInRange(min, max) {
-                    //     return Math.random() * (max - min) + min;
-                    // }
+                    // Добавляем баннер с обратным отсчётом
+                    const countdownBanner = document.createElement('div');
+                    countdownBanner.classList.add('countdown-banner');
 
-                    // const duration = 3000;
-                    // const animationEnd = Date.now() + duration;
-                    // const interval = setInterval(() => {
-                    //     const timeLeft = animationEnd - Date.now();
+                    const laserContainer = document.createElement('div');
+                    laserContainer.classList.add('laser-container');
+                    const countdownNumber = document.createElement('div');
+                    countdownNumber.classList.add('countdown-number');
+                    countdownNumber.textContent = '5';
 
-                    //     if (timeLeft <= 0) {
-                    //         return clearInterval(interval);
-                    //     }
+                    const laserLine = document.createElement('div');
+                    laserLine.classList.add('laser-line');
 
-                    //     const particleCount = 50 * (timeLeft / duration);
-                    //     confetti(Object.assign({}, confettiConfig, {
-                    //         particleCount,
-                    //         origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-                    //     }));
-                    //     confetti(Object.assign({}, confettiConfig, {
-                    //         particleCount,
-                    //         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-                    //     }));
-                    // }, 250);
+                    laserContainer.appendChild(countdownNumber);
+                    laserContainer.appendChild(laserLine);
+                    countdownBanner.appendChild(laserContainer);
+                    document.body.appendChild(countdownBanner);
+
+                    let secondsLeft = 5;
+                    const countdownInterval = setInterval(() => {
+                        secondsLeft--;
+                        countdownNumber.textContent = secondsLeft;
+                        if (secondsLeft <= 0) {
+                            clearInterval(countdownInterval);
+                            // Закрываем окно или редиректим на Telegram
+                            // Для примера: просто закроем вкладку (window.close не всегда сработает, зависит от браузера)
+                            // Можно заменить на: window.location.href = 'tg://resolve?domain=YourTelegramBot';
+                            window.open('tg://resolve?domain=YourTelegramBot','_self');
+                        }
+                    }, 1000);
+
                 } else {
                     console.error('Ошибка сервера:', response.status, response.statusText);
                 }

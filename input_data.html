@@ -166,148 +166,102 @@
     </div>
 
     <script>
-
-        f if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-    console.log('Telegram WebApp API доступен.');
-} else {
-    console.error('Telegram WebApp API недоступен.');
-}
-
-
-        function closeWebApp() {
-            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                Telegram.WebApp.close();
-            } else {
-                console.error("Telegram WebApp не определён.");
-            }
+     // Проверка доступности Telegram WebApp API
+     if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+            Telegram.WebApp.ready();
+            console.log('Telegram WebApp API доступен.');
+        } else {
+            console.error('Telegram WebApp API недоступен.');
         }
-    
-    
-
 
         const qrNameInput = document.getElementById('qrName');
         const qrLinkInput = document.getElementById('qrLink');
         const createButton = document.getElementById('createButton');
         const afterButtons = document.getElementById('afterButtons');
 
+        // Обновление состояния кнопки создания QR-кода
         function updateButtonState() {
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
-            // Кнопка активна, если оба поля заполнены
             createButton.disabled = !(qrName && qrLink);
         }
 
         qrNameInput.addEventListener('input', updateButtonState);
         qrLinkInput.addEventListener('input', updateButtonState);
 
+        // Функция создания QR-кода
         async function createQRCode() {
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
-
-            const qrData = {
-                name: qrName,
-                link: qrLink
-            };
+            const qrData = { name: qrName, link: qrLink };
 
             console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
-
             createButton.disabled = true;
-            createButton.style.backgroundColor = '#4CAF50';
-            createButton.style.color = 'white';
-            createButton.style.cursor = 'default';
-            createButton.innerText = 'QR-код будет отправлен в личные сообщения в Telegram!';
-
-            const confettiConfig = {
-                particleCount: 100,
-                startVelocity: 30,
-                spread: 360,
-                ticks: 60,
-                zIndex: 0
-            };
-
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-
-            const duration = 3000;
-            const animationEnd = Date.now() + duration;
-            const interval = setInterval(() => {
-                const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-                const particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, confettiConfig, {
-                    particleCount,
-                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
-                }));
-                confetti(Object.assign({}, confettiConfig, {
-                    particleCount,
-                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
-                }));
-            }, 250);
+            createButton.textContent = 'QR-код создаётся...';
 
             try {
                 const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(qrData),
                 });
 
                 if (response.ok) {
                     console.log('Ответ сервера:', await response.json());
-                    const successBanner = document.createElement('div');
-                    successBanner.classList.add('success-banner');
-                    successBanner.textContent = 'QR-код успешно отправлен в Telegram!';
-                    document.body.appendChild(successBanner);
-
-                    const countdownBanner = document.createElement('div');
-                    countdownBanner.classList.add('countdown-banner');
-                    const laserContainer = document.createElement('div');
-                    laserContainer.classList.add('laser-container');
-                    const countdownNumber = document.createElement('div');
-                    countdownNumber.classList.add('countdown-number');
-                    countdownNumber.textContent = '5';
-                    const laserLine = document.createElement('div');
-                    laserLine.classList.add('laser-line');
-                    laserContainer.appendChild(countdownNumber);
-                    laserContainer.appendChild(laserLine);
-                    countdownBanner.appendChild(laserContainer);
-                    document.body.appendChild(countdownBanner);
-
-                    let secondsLeft = 5;
-                    const countdownInterval = setInterval(() => {
-                        secondsLeft--;
-                        countdownNumber.textContent = secondsLeft;
-                        if (secondsLeft <= 0) {
-                            clearInterval(countdownInterval);
-                            window.open('tg://resolve?domain=YourTelegramBot','_self');
-                        }
-                    }, 1000);
-
-                    // Показываем дополнительные кнопки после успешного создания QR-кода
-                    afterButtons.style.display = 'block';
+                    displaySuccessBanner();
                 } else {
                     console.error('Ошибка сервера:', response.status, response.statusText);
-                    // При ошибке тоже можем показать кнопки, если нужно
-                    afterButtons.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Ошибка в процессе запроса:', error);
-                // При ошибке тоже можем показать кнопки, если нужно
+            } finally {
                 afterButtons.style.display = 'block';
             }
         }
 
+        // Показ баннера успешного создания QR-кода
+        function displaySuccessBanner() {
+            const successBanner = document.createElement('div');
+            successBanner.classList.add('success-banner');
+            successBanner.textContent = 'QR-код успешно отправлен в Telegram!';
+            document.body.appendChild(successBanner);
+
+            startCountdown();
+        }
+
+        // Таймер обратного отсчёта
+        function startCountdown() {
+            const countdownBanner = document.createElement('div');
+            countdownBanner.classList.add('countdown-banner');
+
+            const countdownNumber = document.createElement('div');
+            countdownNumber.classList.add('countdown-number');
+            countdownNumber.textContent = '5';
+
+            countdownBanner.appendChild(countdownNumber);
+            document.body.appendChild(countdownBanner);
+
+            let secondsLeft = 5;
+            const countdownInterval = setInterval(() => {
+                secondsLeft--;
+                countdownNumber.textContent = secondsLeft;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(countdownInterval);
+                    window.open('tg://resolve?domain=YourTelegramBot', '_self');
+                }
+            }, 1000);
+        }
+
+        // Закрытие окна WebApp
         function closeWebApp() {
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 Telegram.WebApp.close();
             } else {
-                console.log('Telegram.WebApp недоступен. Попробуйте открыть страницу через Telegram WebApp.');
+                console.log('Telegram WebApp недоступен. Попробуйте открыть страницу через Telegram WebApp.');
             }
         }
+    </script>
     </script>
 </body>
 </html>

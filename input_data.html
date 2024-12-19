@@ -167,8 +167,12 @@
 
     <script>
 
-if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.ready();
+        function closeWebApp() {
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                Telegram.WebApp.close();
+            } else {
+                console.error("Telegram WebApp не определён.");
+            }
         }
     
 

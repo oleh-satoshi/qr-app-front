@@ -274,7 +274,7 @@
         function saveEdit() {
             const newName = document.getElementById('edit-name').value;
             const newLink = document.getElementById('edit-link').value;
-            fetch(`https://qr-dynamic.app:8443qr-codes/${currentEditId}`, {
+            fetch(`https://qr-dynamic.app:8443/qr-codes/${currentEditId}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
                 body: JSON.stringify({ name: newName, link: newLink })

@@ -35,18 +35,13 @@
             color: #333;
             margin-bottom: 8px;
         }
-        .form-group input,
-        .form-group textarea {
+        .form-group input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
             box-sizing: border-box;
-        }
-        .form-group textarea {
-            height: 100px;
-            resize: vertical;
         }
         .create-button {
             background-color: #333;
@@ -120,23 +115,26 @@
             }
         }
 
-        /* Дополнительные кнопки */
-        .button-container {
+        .after-buttons {
             margin-top: 20px;
             text-align: center;
+            display: none; 
         }
-        .button-container button {
+
+        .after-buttons button {
             background-color: #333;
             color: #fff;
             border: none;
             border-radius: 8px;
-            padding: 10px 15px;
-            margin: 0 10px;
+            padding: 12px 20px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
             transition: background-color 0.2s ease;
+            margin: 0 5px; 
         }
-        .button-container button:hover {
+
+        .after-buttons button:hover {
             background-color: #555;
         }
     </style>
@@ -151,18 +149,13 @@
             </div>
             <div class="form-group">
                 <label for="qrLink">Ссылка</label>
-                <input type="url" id="qrLink" name="qrLink" required>
-            </div>
-            <div class="form-group" id="additionalField" style="display: none;">
-                <label for="qrText">Дополнительный текст</label>
-                <textarea id="qrText" name="qrText"></textarea>
+                <input type="text" id="qrLink" name="qrLink" required>
             </div>
             <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Создать QR-код</button>
         </form>
     </div>
 
-    <!-- Блок с дополнительными кнопками -->
-    <div class="button-container">
+    <div class="after-buttons" id="afterButtons">
         <button onclick="location.href='index.html'">Вернуться на главную</button>
         <button onclick="window.close();">Закрыть окно</button>
     </div>
@@ -170,55 +163,26 @@
     <script>
         const qrNameInput = document.getElementById('qrName');
         const qrLinkInput = document.getElementById('qrLink');
-        const qrTextInput = document.getElementById('qrText');
         const createButton = document.getElementById('createButton');
-        const additionalField = document.getElementById('additionalField');
-
-        const requiresAdditionalField = localStorage.getItem('requiresAdditionalField');
-        if (requiresAdditionalField !== null) {
-            additionalField.style.display = requiresAdditionalField === 'true' ? 'block' : 'none';
-            if (requiresAdditionalField === 'false') {
-                qrTextInput.required = false;
-            }
-        } else {
-            console.error("Значение 'requiresAdditionalField' не найдено в localStorage.");
-            additionalField.style.display = 'none';
-        }
+        const afterButtons = document.getElementById('afterButtons');
 
         function updateButtonState() {
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
-            let qrText = '';
-            if (requiresAdditionalField && requiresAdditionalField === 'true') {
-                qrText = qrTextInput.value.trim();
-            }
-            createButton.disabled = !(qrName && qrLink && (requiresAdditionalField === 'false' || qrText));
+            // Кнопка активна, если оба поля заполнены
+            createButton.disabled = !(qrName && qrLink);
         }
 
         qrNameInput.addEventListener('input', updateButtonState);
         qrLinkInput.addEventListener('input', updateButtonState);
-        qrTextInput.addEventListener('input', updateButtonState);
 
         async function createQRCode() {
-            if (requiresAdditionalField === 'true' && !qrTextInput.value.trim()) {
-                alert('Пожалуйста, заполните дополнительное поле.');
-                return;
-            }
-
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
-            let qrText = null;
-            if (requiresAdditionalField === 'true') {
-                qrText = qrTextInput.value.trim();
-            }
 
             const qrData = {
-                backgroundShape: localStorage.getItem('backgroundShape'),
-                qrDesign: localStorage.getItem('qrDesign'),
-                telegramId: localStorage.getItem('telegramId'),
                 name: qrName,
-                link: qrLink,
-                additionalText: qrText,
+                link: qrLink
             };
 
             console.log('Отправляем запрос на сервер:', JSON.stringify(qrData));
@@ -298,11 +262,18 @@
                             window.open('tg://resolve?domain=YourTelegramBot','_self');
                         }
                     }, 1000);
+
+                    // Показываем дополнительные кнопки после успешного создания QR-кода
+                    afterButtons.style.display = 'block';
                 } else {
                     console.error('Ошибка сервера:', response.status, response.statusText);
+                    // При ошибке тоже можем показать кнопки, если нужно
+                    afterButtons.style.display = 'block';
                 }
             } catch (error) {
                 console.error('Ошибка в процессе запроса:', error);
+                // При ошибке тоже можем показать кнопки, если нужно
+                afterButtons.style.display = 'block';
             }
         }
     </script>

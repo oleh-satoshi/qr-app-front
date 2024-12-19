@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>    
+<head>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -64,8 +64,6 @@
             background-color: #ccc;
             cursor: not-allowed;
         }
-
-        /* Стиль для уведомления */
         .success-banner {
             margin-top: 20px;
             padding: 15px;
@@ -77,8 +75,6 @@
             font-weight: bold;
             position: relative;
         }
-
-        /* Баннер с таймером */
         .countdown-banner {
             position: relative;
             margin-top: 20px;
@@ -91,20 +87,14 @@
             font-weight: bold;
             overflow: hidden;
         }
-
-        /* Контейнер для лазера и цифры */
         .laser-container {
             position: relative;
             display: inline-block;
         }
-
-        /* Цифра по центру */
         .countdown-number {
             position: relative;
             z-index: 2;
         }
-
-        /* Лазер: тонкая красная линия со шлейфом */
         .laser-line {
             position: absolute;
             top: 50%;
@@ -116,19 +106,38 @@
             z-index: 1;
             animation: laserMove 1s linear infinite;
         }
-
         @keyframes laserMove {
-            0% { 
+            0% {
                 filter: blur(2px);
                 opacity: 1;
             }
-            50% { 
-                opacity: 1; 
+            50% {
+                opacity: 1;
             }
-            100% { 
+            100% {
                 opacity: 0;
                 filter: blur(0px);
             }
+        }
+
+        /* Дополнительные кнопки */
+        .button-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .button-container button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+        }
+        .button-container button:hover {
+            background-color: #555;
         }
     </style>
 </head>
@@ -151,14 +160,21 @@
             <button type="button" class="create-button" id="createButton" disabled onclick="createQRCode()">Создать QR-код</button>
         </form>
     </div>
+
+    <!-- Блок с дополнительными кнопками -->
+    <div class="button-container">
+        <button onclick="location.href='index.html'">Вернуться на главную</button>
+        <button onclick="window.close();">Закрыть окно</button>
+    </div>
+
     <script>
         const qrNameInput = document.getElementById('qrName');
         const qrLinkInput = document.getElementById('qrLink');
         const qrTextInput = document.getElementById('qrText');
         const createButton = document.getElementById('createButton');
         const additionalField = document.getElementById('additionalField');
-        const requiresAdditionalField = localStorage.getItem('requiresAdditionalField');
 
+        const requiresAdditionalField = localStorage.getItem('requiresAdditionalField');
         if (requiresAdditionalField !== null) {
             additionalField.style.display = requiresAdditionalField === 'true' ? 'block' : 'none';
             if (requiresAdditionalField === 'false') {
@@ -251,29 +267,23 @@
                     },
                     body: JSON.stringify(qrData),
                 });
+
                 if (response.ok) {
                     console.log('Ответ сервера:', await response.json());
-
-                    // Добавляем зелёный баннер уведомления
                     const successBanner = document.createElement('div');
                     successBanner.classList.add('success-banner');
                     successBanner.textContent = 'QR-код успешно отправлен в Telegram!';
-
                     document.body.appendChild(successBanner);
 
-                    // Добавляем баннер с обратным отсчётом
                     const countdownBanner = document.createElement('div');
                     countdownBanner.classList.add('countdown-banner');
-
                     const laserContainer = document.createElement('div');
                     laserContainer.classList.add('laser-container');
                     const countdownNumber = document.createElement('div');
                     countdownNumber.classList.add('countdown-number');
                     countdownNumber.textContent = '5';
-
                     const laserLine = document.createElement('div');
                     laserLine.classList.add('laser-line');
-
                     laserContainer.appendChild(countdownNumber);
                     laserContainer.appendChild(laserLine);
                     countdownBanner.appendChild(laserContainer);
@@ -285,13 +295,9 @@
                         countdownNumber.textContent = secondsLeft;
                         if (secondsLeft <= 0) {
                             clearInterval(countdownInterval);
-                            // Закрываем окно или редиректим на Telegram
-                            // Для примера: просто закроем вкладку (window.close не всегда сработает, зависит от браузера)
-                            // Можно заменить на: window.location.href = 'tg://resolve?domain=YourTelegramBot';
                             window.open('tg://resolve?domain=YourTelegramBot','_self');
                         }
                     }, 1000);
-
                 } else {
                     console.error('Ошибка сервера:', response.status, response.statusText);
                 }

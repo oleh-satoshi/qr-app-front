@@ -167,6 +167,13 @@
 
     <script>
 
+        f if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+    console.log('Telegram WebApp API доступен.');
+} else {
+    console.error('Telegram WebApp API недоступен.');
+}
+
+
         function closeWebApp() {
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 Telegram.WebApp.close();
@@ -174,6 +181,7 @@
                 console.error("Telegram WebApp не определён.");
             }
         }
+    
     
 
 

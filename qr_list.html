@@ -189,9 +189,13 @@
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-button">
+    <a href="index.html" class="back-button" id="backButton">
         <img src="left-arrow.png" alt="Назад">
     </a>
+    <div>
+        <p>Количество сканирований: <span id="scanCount">0</span></p>
+    </div>
+    
         <h1>Ваши QR-коды</h1>
     <div class="notification">
         <div class="notification-text">
@@ -329,6 +333,19 @@
         }
 
         loadQRCodes();
+
+        // Обрабатываем клик по кнопке "Назад"
+document.getElementById('backButton').addEventListener('click', function (e) {
+    e.preventDefault(); // Отменяем стандартный переход по ссылке
+    const telegramId = localStorage.getItem('telegramId');
+    const totalScans = localStorage.getItem('totalScans');
+    // Если есть данные в localStorage, добавляем их в URL
+    if (telegramId) {
+        window.location.href = `index.html?telegramId=${telegramId}&totalScans=${totalScans}`;
+    } else {
+        window.location.href = 'index.html'; // Переход без параметров
+    }
+});
     </script>
 </body>
 </html>

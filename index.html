@@ -72,7 +72,7 @@
         }
     </style>
 </head>
-<body>
+<body>cl
     <!-- Информация о количестве сканирований -->
     <div class="scan-info">
         <span class="scan-text" style="margin-bottom: 10px;">У вас всего</span>
@@ -87,35 +87,32 @@
     </div>
 
     <script>
-       // Функция для извлечения параметров из URL
-function getQueryParams() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        telegramId: params.get('telegramId'), // Извлечение ID Telegram
-        totalScans: params.get('totalScans') || 0 // Значение по умолчанию 0
-    };
-}
+          // Функция для извлечения параметров из URL
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            telegramId: params.get('telegramId'), // Извлечение ID Telegram
+            totalScans: params.get('totalScans') || 0 // Значение по умолчанию 0
+        };
+    }
 
-// Проверяем, есть ли параметры в URL
-if (window.location.search) {
-    // Извлекаем параметры из URL
+    // Проверяем, есть ли параметры в URL
     const params = getQueryParams();
-
-    // Сохраняем параметры в localStorage, если они существуют
     if (params.telegramId) {
+        // Если параметры есть, сохраняем их в localStorage
         localStorage.setItem('telegramId', params.telegramId);
+        localStorage.setItem('totalScans', params.totalScans);
+        console.log('Saved to localStorage:', params);
+    } else {
+        // Если параметров нет, берем данные из localStorage
+        params.telegramId = localStorage.getItem('telegramId') || 'Неизвестный ID';
+        params.totalScans = localStorage.getItem('totalScans') || 0;
+        console.log('Loaded from localStorage:', params);
     }
 
     // Обновляем количество сканирований на странице
     document.getElementById('scanCount').textContent = params.totalScans;
 
-    console.log('Saved to localStorage:', {
-        telegramId: params.telegramId,
-        totalScans: params.totalScans
-    });
-} else {
-    console.log('URL does not contain parameters. No action taken.');
-}
     </script>
 </body>
 </html>

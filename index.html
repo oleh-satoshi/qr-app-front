@@ -87,33 +87,35 @@
     </div>
 
     <script>
-        // Функция для извлечения параметров из URL
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                telegramId: params.get('telegramId'),
-                totalScans: params.get('totalScans') || 0 // Значение по умолчанию 0
-            };
-        }
+       // Функция для извлечения параметров из URL
+function getQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        telegramId: params.get('telegramId'), // Извлечение ID Telegram
+        totalScans: params.get('totalScans') || 0 // Значение по умолчанию 0
+    };
+}
 
-        // // Очищаем localStorage
-        // localStorage.clear();
+// Проверяем, есть ли параметры в URL
+if (window.location.search) {
+    // Извлекаем параметры из URL
+    const params = getQueryParams();
 
-        // Извлекаем параметры из URL
-        const params = getQueryParams();
+    // Сохраняем параметры в localStorage, если они существуют
+    if (params.telegramId) {
+        localStorage.setItem('telegramId', params.telegramId);
+    }
 
-        // Сохраняем параметры в localStorage, если они существуют
-        if (params.telegramId) {
-            localStorage.setItem('telegramId', params.telegramId);
-        }
+    // Обновляем количество сканирований на странице
+    document.getElementById('scanCount').textContent = params.totalScans;
 
-        // Обновляем количество сканирований на странице
-        document.getElementById('scanCount').textContent = params.totalScans;
-
-        console.log('Saved to localStorage:', {
-            telegramId: params.telegramId,
-            totalScans: params.totalScans
-        });
+    console.log('Saved to localStorage:', {
+        telegramId: params.telegramId,
+        totalScans: params.totalScans
+    });
+} else {
+    console.log('URL does not contain parameters. No action taken.');
+}
     </script>
 </body>
 </html>

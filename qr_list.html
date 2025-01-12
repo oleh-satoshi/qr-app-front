@@ -390,7 +390,7 @@ input:checked + .slider:before {
             const newLink = document.getElementById('edit-link').value;
             const resetCounter = document.getElementById("reset-counter").checked; 
 
-            fetch(`https://qr-dynamic.app:8443/qr-codes/${currentEditId}?resetCounter=${resetCounter}``, {
+            fetch(`https://qr-dynamic.app:8443/qr-codes/${currentEditId}?resetCounter=${resetCounter}`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
                 body: JSON.stringify({ name: newName, link: newLink })

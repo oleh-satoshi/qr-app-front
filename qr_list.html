@@ -154,12 +154,12 @@
             background-color: #d9534f;
             flex: 1;
         }
+        
         .qr-info a {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis; /* Добавлено для сокращения длинных ссылок */
-            display: inline-block; /* Обеспечивает корректное применение стилей */
+            word-wrap: break-word; /* Перенос длинных слов, таких как URL */
+            white-space: normal; /* Разрешить перенос текста */
         }
+
 
         @media (max-width: 600px) {
             #modal {
@@ -272,10 +272,6 @@ input:checked + .slider:before {
   line-height: 1.4;
 }
 
-.qr-info {
-    white-space: nowrap;
-}
-
 
     </style>
 </head>
@@ -300,7 +296,7 @@ input:checked + .slider:before {
 
     <!-- Модальное окно -->
     <div id="overlay" onclick="closeModal()"></div>
-    <div  class="qr-info" id="modal">
+    <div id="modal">
         <h3>Редактирование QR-кода</h3>
         <input id="edit-name" type="text" placeholder="Имя QR-кода" />
         <input id="edit-link" type="text" placeholder="Ссылка QR-кода" />

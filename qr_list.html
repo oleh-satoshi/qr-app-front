@@ -235,6 +235,15 @@
         <h3>Редактирование QR-кода</h3>
         <input id="edit-name" type="text" placeholder="Имя QR-кода" />
         <input id="edit-link" type="text" placeholder="Ссылка QR-кода" />
+
+                <!-- Новый блок: Сброс счётчика сканирований -->
+        <div class="reset-container">
+            <label for="reset-counter">
+            <input id="reset-counter" type="checkbox" />
+            Сбросить счётчик сканирований
+            </label>
+        </div>
+
         <div class="modal-buttons">
             <button class="btn btn-save" onclick="saveEdit()">Сохранить</button>
             <button class="btn btn-cancel" onclick="closeModal()">Отменить</button>

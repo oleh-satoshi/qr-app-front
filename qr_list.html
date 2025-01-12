@@ -154,6 +154,12 @@
             background-color: #d9534f;
             flex: 1;
         }
+        .qr-info a {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Добавлено для сокращения длинных ссылок */
+            display: inline-block; /* Обеспечивает корректное применение стилей */
+        }
 
         @media (max-width: 600px) {
             #modal {
@@ -259,11 +265,15 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
-.description {
+.reset-toggler-description {
   font-size: 12px;
   color: #666;
   margin-top: 5px;
   line-height: 1.4;
+}
+
+.qr-info {
+    white-space: nowrap;
 }
 
 
@@ -290,7 +300,7 @@ input:checked + .slider:before {
 
     <!-- Модальное окно -->
     <div id="overlay" onclick="closeModal()"></div>
-    <div id="modal">
+    <div  class="qr-info" id="modal">
         <h3>Редактирование QR-кода</h3>
         <input id="edit-name" type="text" placeholder="Имя QR-кода" />
         <input id="edit-link" type="text" placeholder="Ссылка QR-кода" />
@@ -302,7 +312,7 @@ input:checked + .slider:before {
             </label>
             <span>Сбросить счётчик сканирований</span>
           </div>
-          <p class="description">Включите эту опцию, если хотите обнулить количество сканирований для этого QR-кода.</p>
+          <p class="reset-toggler-description">Включите эту опцию, если хотите обнулить количество сканирований для этого QR-кода.</p>
           
           
         <div class="modal-buttons">

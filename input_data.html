@@ -176,83 +176,89 @@
         qrTextInput.addEventListener('input', updateButtonState);
 
         async function createQRCode() {
-           
-            const qrName = qrNameInput.value.trim();
-            const qrLink = qrLinkInput.value.trim();
-            const qrText = (requiresAdditionalField === 'true') ? qrTextInput.value.trim() : null;
+    const qrName = qrNameInput.value.trim();
+    const qrLink = qrLinkInput.value.trim();
+    const qrText = (requiresAdditionalField === 'true') ? qrTextInput.value.trim() : null;
 
-            const qrData = {
-                backgroundShape: localStorage.getItem('backgroundShape'),
-                qrDesign: localStorage.getItem('qrDesign'),
-                telegramId: localStorage.getItem('telegramId'),
-                name: qrName,
-                link: qrLink,
-                additionalText: qrText
-            };
+    const qrData = {
+        backgroundShape: localStorage.getItem('backgroundShape'),
+        qrDesign: localStorage.getItem('qrDesign'),
+        telegramId: localStorage.getItem('telegramId'),
+        name: qrName,
+        link: qrLink,
+        additionalText: qrText
+    };
 
-           
+    console.log('Отправляем запрос:', JSON.stringify(qrData));
 
-            console.log('Отправляем запрос:', JSON.stringify(qrData));
-
-            // // Меняем кнопку на зелёную и текст
-            // createButton.classList.add('success');
-            // createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения..';
-            // Проверяем, это первое нажатие или нет
     if (firstClick) {
         console.log('Первый клик, обновляем текст и цвет кнопки.');
         createButton.classList.add('success');
         createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
         firstClick = false; 
         localStorage.setItem('firstClick', JSON.stringify(firstClick));
-        console.log('Первый клик:', firstClick);
+
+        try {
+            const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(qrData),
+            });
+            console.log('Запрос успешно отправлен');
+        } catch (error) {
+            console.error('Ошибка при отправке запроса:', error);
+        }
     } else {
         console.log('Повторный клик, выводим случайное сообщение.');
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         createButton.textContent = randomMessage;
-        return; // Завершаем функцию
+        return; // Завершаем выполнение функции
     }
 
-             // Запускаем конфетти
-             const confettiConfig = {
-                particleCount: 100,
-                startVelocity: 30,
-                spread: 360,
-                ticks: 60,
-                zIndex: 0,
-            };
-            const duration = 3000;
-            const animationEnd = Date.now() + duration;
-            const interval = setInterval(() => {
-                const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-                const particleCount = 50 * (timeLeft / duration);
-                confetti(Object.assign({}, confettiConfig, {
-                    particleCount,
-                    origin: { x: Math.random(), y: Math.random() - 0.2 },
-                }));
-            }, 250);
+    // Запускаем конфетти
+    const confettiConfig = {
+        particleCount: 100,
+        startVelocity: 30,
+        spread: 360,
+        ticks: 60,
+        zIndex: 0,
+    };
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const interval = setInterval(() => {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+            return clearInterval(interval);
+        }
+        const particleCount = 50 * (timeLeft / duration);
+        confetti(Object.assign({}, confettiConfig, {
+            particleCount,
+            origin: { x: Math.random(), y: Math.random() - 0.2 },
+        }));
+    }, 250);
 
-            // Через 2 секунды вне зависимости от ответа сервера показать чёрную кнопку
-            setTimeout(() => {
-                afterButtons.classList.add('show');
-            }, 2000);
+    // Через 2 секунды вне зависимости от ответа сервера показать чёрную кнопку
+    setTimeout(() => {
+        afterButtons.classList.add('show');
+    }, 2000);
+}
 
-            if (firstClick) {
+// Обработчик для кнопки "Назад"
+document.getElementById('backButton').addEventListener('click', function (e) {
+    e.preventDefault();
+    const telegramId = localStorage.getItem('telegramId');
+    const totalScans = localStorage.getItem('totalScans');
+    if (telegramId) {
+        window.location.href = `index.html?telegramId=${telegramId}&totalScans=${totalScans}`;
+    } else {
+        window.location.href = 'index.html';
+    }
+});
 
-                try {
-                    const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(qrData),
-                    });
-
-                    // Здесь не важно, что ответит сервер – кнопка уже покажется через 2 секунды
-                } catch (error) {
-                    console.error('Ошибка:', error);
-                }
-        }}
+// Сброс состояния при выходе со страницы
+window.addEventListener('beforeunload', () => {
+    localStorage.removeItem('firstClick');
+});
 
          // Обрабатываем клик по кнопке "Назад"
 document.getElementById('backButton').addEventListener('click', function (e) {
@@ -267,9 +273,7 @@ document.getElementById('backButton').addEventListener('click', function (e) {
     }
 });
 
-    window.addEventListener('beforeunload', () => {
-        localStorage.removeItem('firstClick');
-    });
+   
     </script>
 </body>
 </html>

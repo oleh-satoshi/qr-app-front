@@ -286,9 +286,9 @@
         });
     
         window.addEventListener('beforeunload', () => {
-            console.log('Сбрасываем firstClick при обновлении страницы.');
-            localStorage.removeItem('firstClick');
-        });
+    console.log('Удаляем firstClick из localStorage перед выходом.');
+    localStorage.removeItem('firstClick');
+});
     </script>
 </body>
 </html>

@@ -203,7 +203,7 @@
         firstClick = false; // Меняем состояние на "не первое нажатие"
     } else {
         // Если не первое нажатие, показываем случайное сообщение
-        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         createButton.textContent = randomMessage;
     }
 

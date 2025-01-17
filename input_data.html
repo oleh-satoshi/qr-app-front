@@ -199,8 +199,9 @@
             // Проверяем, это первое нажатие или нет
     if (firstClick) {
         createButton.classList.add('success');
-        createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
-        firstClick = false; // Меняем состояние на "не первое нажатие"
+    createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
+    firstClick = false; // Меняем состояние на "не первое нажатие"
+    localStorage.setItem('firstClick', JSON.stringify(firstClick)); // Сохраняем состояние
     } else {
         // Если не первое нажатие, показываем случайное сообщение
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];

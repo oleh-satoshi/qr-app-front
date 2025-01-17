@@ -115,6 +115,8 @@
         const createButton = document.getElementById('createButton');
         const additionalField = document.getElementById('additionalField');
         const afterButtons = document.getElementById('afterButtons');
+        // Устанавливаем начальное значение firstClick
+        let firstClick = localStorage.getItem('firstClick') === null ? true : JSON.parse(localStorage.getItem('firstClick'));
         const funnyMessages = [
     "Терпение — путь к успеху! 🤓",
     "Ваш QR-код уже готовится! Немного магии ✨",
@@ -145,7 +147,6 @@
     "Нажимать можно, но быстрее не станет! 🤭",
     "Не дёргайтесь, код скоро будет с вами! 🚦",
     "Мы все еще здесь, всё будет! 🍀",
-    "QR делает перерыв... попробуйте позже! 🛑",
     "Скоро будет готово, обещаем! 🙏",
     "QR-код почти жив! 🦾",
     "Дайте кнопке немного отдохнуть... 😴",
@@ -176,11 +177,7 @@
         qrTextInput.addEventListener('input', updateButtonState);
 
         async function createQRCode() {
-            if (createButton.classList.contains('success')) {
-                const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-                alert(randomMessage); // Показываем случайное сообщение
-                return; // Выходим из функции, чтобы не отправлять повторный запрос
-            }
+           
             const qrName = qrNameInput.value.trim();
             const qrLink = qrLinkInput.value.trim();
             const qrText = (requiresAdditionalField === 'true') ? qrTextInput.value.trim() : null;
@@ -196,9 +193,19 @@
 
             console.log('Отправляем запрос:', JSON.stringify(qrData));
 
-            // Меняем кнопку на зелёную и текст
-            createButton.classList.add('success');
-            createButton.textContent = 'QR-коды будут отправлены в личные сообщения...';
+            // // Меняем кнопку на зелёную и текст
+            // createButton.classList.add('success');
+            // createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения..';
+            // Проверяем, это первое нажатие или нет
+    if (firstClick) {
+        createButton.classList.add('success');
+        createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
+        firstClick = false; // Меняем состояние на "не первое нажатие"
+    } else {
+        // Если не первое нажатие, показываем случайное сообщение
+        const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+        createButton.textContent = randomMessage;
+    }
 
             // Запускаем конфетти
             const confettiConfig = {

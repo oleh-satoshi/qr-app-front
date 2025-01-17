@@ -116,8 +116,7 @@
         const additionalField = document.getElementById('additionalField');
         const afterButtons = document.getElementById('afterButtons');
         // Устанавливаем начальное значение firstClick
-        let firstClick = localStorage.getItem('firstClick') === null ? true : JSON.parse(localStorage.getItem('firstClick'));
-        const funnyMessages = [
+        let firstClick = localStorage.getItem('firstClick') === null ? true : JSON.parse(localStorage.getItem('firstClick'));        const funnyMessages = [
         "Терпение — путь к успеху!",
         "Ваш QR-код уже готовится! ",
         "Кто ждет, тот получает лучшее!",
@@ -200,15 +199,17 @@
             // createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения..';
             // Проверяем, это первое нажатие или нет
     if (firstClick) {
+        console.log('Первый клик, обновляем текст и цвет кнопки.');
         createButton.classList.add('success');
         createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
-        firstClick = false; // Меняем состояние на "не первое нажатие"
-        localStorage.setItem('firstClick', JSON.stringify(firstClick)); // Сохраняем состояние
+        firstClick = false; 
+        localStorage.setItem('firstClick', JSON.stringify(firstClick));
+        console.log('Первый клик:', firstClick);
     } else {
-        // Если не первое нажатие, показываем случайное сообщение
+        console.log('Повторный клик, выводим случайное сообщение.');
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         createButton.textContent = randomMessage;
-        return; // Завершаем выполнение функции
+        return; // Завершаем функцию
     }
 
              // Запускаем конфетти
@@ -238,18 +239,20 @@
                 afterButtons.classList.add('show');
             }, 2000);
 
-            try {
-                const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(qrData),
-                });
+            if (firstClick) {
 
-                // Здесь не важно, что ответит сервер – кнопка уже покажется через 2 секунды
-            } catch (error) {
-                console.error('Ошибка:', error);
-            }
-        }
+                try {
+                    const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(qrData),
+                    });
+
+                    // Здесь не важно, что ответит сервер – кнопка уже покажется через 2 секунды
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                }
+        }}
 
          // Обрабатываем клик по кнопке "Назад"
 document.getElementById('backButton').addEventListener('click', function (e) {
@@ -263,6 +266,10 @@ document.getElementById('backButton').addEventListener('click', function (e) {
         window.location.href = 'index.html'; // Переход без параметров
     }
 });
+
+    window.addEventListener('beforeunload', () => {
+        localStorage.removeItem('firstClick');
+    });
     </script>
 </body>
 </html>

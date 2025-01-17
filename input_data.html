@@ -192,55 +192,59 @@
     console.log('Отправляем запрос:', JSON.stringify(qrData));
 
     if (firstClick) {
+        // Первое нажатие
         console.log('Первый клик, обновляем текст и цвет кнопки.');
         createButton.classList.add('success');
         createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
         firstClick = false; 
-        localStorage.setItem('firstClick', JSON.stringify(firstClick));
+        localStorage.setItem('firstClick', JSON.stringify(firstClick)); // Сохраняем состояние
 
+        // Отправляем запрос на сервер
         try {
             const response = await fetch('https://qr-dynamic.app:8443/qr-codes/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(qrData),
             });
-            console.log('Запрос успешно отправлен');
+            console.log('Запрос успешно отправлен.');
         } catch (error) {
             console.error('Ошибка при отправке запроса:', error);
         }
+
+        // Показываем конфетти
+        const confettiConfig = {
+            particleCount: 100,
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            zIndex: 0,
+        };
+        const duration = 3000;
+        const animationEnd = Date.now() + duration;
+        const interval = setInterval(() => {
+            const timeLeft = animationEnd - Date.now();
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+            const particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, confettiConfig, {
+                particleCount,
+                origin: { x: Math.random(), y: Math.random() - 0.2 },
+            }));
+        }, 250);
+
+        // Через 2 секунды показать другую кнопку
+        setTimeout(() => {
+            afterButtons.classList.add('show');
+            console.log('Показали другие кнопки.');
+        }, 2000);
+
     } else {
+        // Повторные нажатия
         console.log('Повторный клик, выводим случайное сообщение.');
         const randomMessage = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
         createButton.textContent = randomMessage;
-        return; // Завершаем выполнение функции
     }
-
-    // Запускаем конфетти
-    const confettiConfig = {
-        particleCount: 100,
-        startVelocity: 30,
-        spread: 360,
-        ticks: 60,
-        zIndex: 0,
-    };
-    const duration = 3000;
-    const animationEnd = Date.now() + duration;
-    const interval = setInterval(() => {
-        const timeLeft = animationEnd - Date.now();
-        if (timeLeft <= 0) {
-            return clearInterval(interval);
-        }
-        const particleCount = 50 * (timeLeft / duration);
-        confetti(Object.assign({}, confettiConfig, {
-            particleCount,
-            origin: { x: Math.random(), y: Math.random() - 0.2 },
-        }));
-    }, 250);
-
-    // Через 2 секунды вне зависимости от ответа сервера показать чёрную кнопку
-    setTimeout(() => {
-        afterButtons.classList.add('show');
-    }, 2000);
 }
 
 // Обработчик для кнопки "Назад"
@@ -259,20 +263,6 @@ document.getElementById('backButton').addEventListener('click', function (e) {
 window.addEventListener('beforeunload', () => {
     localStorage.removeItem('firstClick');
 });
-
-         // Обрабатываем клик по кнопке "Назад"
-document.getElementById('backButton').addEventListener('click', function (e) {
-    e.preventDefault(); // Отменяем стандартный переход по ссылке
-    const telegramId = localStorage.getItem('telegramId');
-    const totalScans = localStorage.getItem('totalScans');
-    // Если есть данные в localStorage, добавляем их в URL
-    if (telegramId) {
-        window.location.href = `index.html?telegramId=${telegramId}&totalScans=${totalScans}`;
-    } else {
-        window.location.href = 'index.html'; // Переход без параметров
-    }
-});
-
    
     </script>
 </body>

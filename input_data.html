@@ -118,11 +118,11 @@
         const additionalField = document.getElementById('additionalField');
         const afterButtons = document.getElementById('afterButtons');
     
-        // Устанавливаем начальное значение firstClick
-        let firstClick = true;
-        if (typeof localStorage !== 'undefined') {
-            firstClick = localStorage.getItem('firstClick') === null ? true : JSON.parse(localStorage.getItem('firstClick'));
-        }
+        // // Устанавливаем начальное значение firstClick
+        // let firstClick = true;
+        // if (typeof localStorage !== 'undefined') {
+        //     firstClick = localStorage.getItem('firstClick') === null ? true : JSON.parse(localStorage.getItem('firstClick'));
+        // }
     
         const funnyMessages = [
             "Терпение — путь к успеху!",
@@ -225,12 +225,11 @@
             console.log('Отправляем запрос:', JSON.stringify(qrData));
     
             if (firstClick) {
-                console.log('Первый клик, обновляем текст и цвет кнопки.');
+                // Применяем зелёный фон и меняем текст кнопки
                 createButton.classList.add('success');
                 createButton.textContent = 'Отправляем QR-коды в ваши личные сообщения...';
-                firstClick = false; 
-                localStorage.setItem('firstClick', JSON.stringify(firstClick));
-    
+                firstClick = false; // Следующие клики уже не будут первыми
+            
             
                 const confettiConfig = {
                     particleCount: 100,

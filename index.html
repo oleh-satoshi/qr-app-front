@@ -75,7 +75,10 @@
         }
         
     </style>
-   
+   <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+  <script>
+    Telegram.WebApp.ready();
+  </script>
 </head>
 <body>
     <!-- Информация о количестве сканирований -->
@@ -91,10 +94,6 @@
         <button class="action-button" onclick="window.location.href='qr_list.html'">Мои QR-коды</button>
     </div>
 
-    <!-- Telegram WebApp SDK -->
-    <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
-    <script>
-        Telegram.WebApp.ready(); // Обязательно для отображения интерфейса
 
         // Функция для извлечения параметров из URL
         function getQueryParams() {
